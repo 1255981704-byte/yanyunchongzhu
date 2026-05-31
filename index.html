@@ -1133,7 +1133,7 @@
                 <div class="shop-item" onclick="buyPearls(3600, 300)"><div class="shop-val"><div class="curr-icon icon-pearl"></div> 3600</div><div class="shop-price">¥ 300</div></div>
                 <div class="shop-item" onclick="buyPearls(7200, 600)"><div class="shop-val"><div class="curr-icon icon-pearl"></div> 7200</div><div class="shop-price">¥ 600</div></div>
                 <div class="shop-item" onclick="buyPearls(14400, 1200)"><div class="shop-val"><div class="curr-icon icon-pearl"></div> 14400</div><div class="shop-price">¥ 1200</div></div>
-                <div class="shop-item" onclick="customBuyPearl()"><div class="shop-val" style="color:#dfb564;"><div class="curr-icon icon-pearl"></div> 自定义</div><div class="shop-price">1元 = 12明珠</div></div>
+                <div class="shop-item" onclick="customBuyPearl()"><div class="shop-val" style="color:#dfb564;"><div class="curr-icon icon-pearl"></div> 自定义</div><div class="shop-price"></div></div>
             </div>
             <button class="btn-close-shop" onclick="closeShop('pearl')">暂不获取</button>
         </div>
@@ -1144,10 +1144,10 @@
         <div class="shop-box">
             <div class="shop-title">兑换 玄石</div>
             <div class="shop-grid" style="grid-template-columns: repeat(2, 1fr);">
-                <div class="shop-item" onclick="buyStones(1, 200)"><div class="shop-val"><div class="curr-icon icon-stone"></div> 1</div><div class="shop-price">200 明珠</div></div>
-                <div class="shop-item" onclick="buyStones(10, 2000)"><div class="shop-val"><div class="curr-icon icon-stone"></div> 10</div><div class="shop-price">2000 明珠</div></div>
-                <div class="shop-item" onclick="buyStones(50, 10000)"><div class="shop-val"><div class="curr-icon icon-stone"></div> 50</div><div class="shop-price">10000 明珠</div></div>
-                <div class="shop-item" onclick="customBuyStone()"><div class="shop-val" style="color:#dfb564;"><div class="curr-icon icon-stone"></div> 自定义</div><div class="shop-price">1石 = 200明珠</div></div>
+                <div class="shop-item" onclick="buyStones(1, 200)"><div class="shop-val"><div class="curr-icon icon-stone"></div> 1</div><div class="shop-price">200 长明珠</div></div>
+                <div class="shop-item" onclick="buyStones(10, 2000)"><div class="shop-val"><div class="curr-icon icon-stone"></div> 10</div><div class="shop-price">2000 长明珠</div></div>
+                <div class="shop-item" onclick="buyStones(50, 10000)"><div class="shop-val"><div class="curr-icon icon-stone"></div> 50</div><div class="shop-price">10000 长明珠</div></div>
+                <div class="shop-item" onclick="customBuyStone()"><div class="shop-val" style="color:#dfb564;"><div class="curr-icon icon-stone"></div> 自定义</div><div class="shop-price">1玄石 = 200长明珠</div></div>
             </div>
             <button class="btn-close-shop" onclick="closeShop('stone')">暂不兑换</button>
         </div>
@@ -1462,7 +1462,7 @@
                 const iconHtml = `<div class="slot-icon"><div class="diamond"></div></div>`;
                 let dispName = formatDispName(s.name);
                 let nameHtml = s.locked ? `<div class="slot-name">${svgLock} ${dispName}</div>` : `<div class="slot-name">${dispName}</div>`;
-                let extraHtml = s.subColor ? `<div class="slot-extra">辅:${s.subColor} &nbsp;缀:${s.accentColor} &nbsp;金:${s.metalColor}</div>` : '';
+                let extraHtml = s.subColor ? `<div class="slot-extra">辅色:${s.subColor} &nbsp;点缀色:${s.accentColor} &nbsp;金属色:${s.metalColor}</div>` : '';
 
                 const infoHtml = `<div class="slot-info"><div class="slot-type">${s.type}</div>${nameHtml}${extraHtml}</div>`;
                 el.innerHTML = s.align === 'left' ? infoHtml + iconHtml : iconHtml + infoHtml;
@@ -1515,7 +1515,7 @@
                 
                 let dispName = formatDispName(s.name);
                 let nameHtml = s.locked && i !== 4 ? `<div class="slot-name">${svgLock} ${dispName}</div>` : `<div class="slot-name">${dispName}</div>`;
-                let extraHtml = s.subColor ? `<div class="slot-extra">辅:${s.subColor} &nbsp;缀:${s.accentColor} &nbsp;金:${s.metalColor}</div>` : '';
+                let extraHtml = s.subColor ? `<div class="slot-extra">辅色:${s.subColor} &nbsp;点缀色:${s.accentColor} &nbsp;金属色:${s.metalColor}</div>` : '';
                 el.querySelector('.slot-info').innerHTML = `<div class="slot-type">${s.type}</div>${nameHtml}${extraHtml}`;
             });
 
