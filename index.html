@@ -343,12 +343,6 @@
 </head>
 <body>
 
-<div id="audio-system" style="display:none;">
-    <audio id="audio-chongzhu" src="重铸.mp3" preload="auto"></audio> 
-    <audio id="audio-chujin" src="出金.mp3" preload="auto"></audio> 
-    <audio id="audio-lvge" src="律格.mp3" preload="auto"></audio> 
-</div>
-
     <!-- 登录界面 -->
     <div id="login-overlay">
         <div class="login-box">
@@ -1174,10 +1168,6 @@
     <div class="toast" id="toast"></div>
 
     <script>
-function playSound(type) {
-    const audioEl = document.getElementById(`audio-${type}`);
-    if (audioEl) { const clone = audioEl.cloneNode(); clone.play().catch(e => {}); }
-}
         const STORAGE_KEY = 'yysls_reforge_data_v3_7';
 
         const WEAPON_TITLES = {
@@ -1762,7 +1752,6 @@ function playSound(type) {
         }
 
         function triggerBreakthrough(targetSlot) {
-playSound('lvge')
             isBreakthroughState = true;
             const overlay = document.getElementById('breakthrough-overlay'); const rowContainer = document.getElementById('bt-diamonds-row'); const textSub = document.getElementById('bt-sub-text');
             const logicalOrder = [0, 1, 2, 3, 4]; rowContainer.innerHTML = '';
@@ -1798,7 +1787,6 @@ playSound('lvge')
         }
 
         function doReforgeAction() {
-playSound('chongzhu');
             let locks = appData.weaponData.slots.filter((s, i) => s.locked && i !== 4).length; if (locks >= 4) return;
             let cost = COST_MAP[locks] || 1;
 
@@ -1841,9 +1829,6 @@ playSound('chongzhu');
             });
 
             if (goldsThisTurn >= 2) {
- playSound('chujin'); // <--- 加在这里
-    const flash = document.getElementById('flash-layer');
-    // ...
                 let swallowed = false;
                 appData.weaponData.slots.forEach((s, i) => { if (s.logIdx < startUnlockedCount && !s.locked && i !== 4) { s.targetPity = Math.min(90, s.targetPity + 10); swallowed = true; } });
                 if (swallowed) setTimeout(() => showToast("触发双爆吞孔！其余孔位目标保底+10"), 1000);
@@ -1861,9 +1846,6 @@ playSound('chongzhu');
                     const mToast = document.getElementById('multi-gold-toast'); mToast.innerText = goldsThisTurn >= 3 ? "三金耀世" : "双金现世";
                     mToast.style.opacity = 1; mToast.style.transform = 'translate(-50%, -50%) scale(1)'; setTimeout(() => { mToast.style.opacity = 0; mToast.style.transform = 'translate(-50%, -50%) scale(0.5)'; }, 1500);
                 } else if (goldsThisTurn === 1) {
- playSound('chujin'); // <--- 加在这里
-    const flash = document.getElementById('flash-layer');
-    // ...
                     const flash = document.getElementById('flash-layer');
                     flash.style.background = '#fff'; flash.style.opacity = 0.2; setTimeout(() => flash.style.opacity = 0, 150);
                 }
