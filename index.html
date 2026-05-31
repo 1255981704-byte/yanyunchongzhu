@@ -1462,7 +1462,7 @@
                 const iconHtml = `<div class="slot-icon"><div class="diamond"></div></div>`;
                 let dispName = formatDispName(s.name);
                 let nameHtml = s.locked ? `<div class="slot-name">${svgLock} ${dispName}</div>` : `<div class="slot-name">${dispName}</div>`;
-                let extraHtml = s.subColor ? `<div class="slot-extra">辅色:${s.subColor} &nbsp;点缀色:${s.accentColor} &nbsp;金属色:${s.metalColor}</div>` : '';
+                let extraHtml = s.subColor ? `<div class="slot-extra">辅色:${s.subColor} &nbsp;<br>点缀色:${s.accentColor} &nbsp;金属色:${s.metalColor}</div>` : '';
 
                 const infoHtml = `<div class="slot-info"><div class="slot-type">${s.type}</div>${nameHtml}${extraHtml}</div>`;
                 el.innerHTML = s.align === 'left' ? infoHtml + iconHtml : iconHtml + infoHtml;
