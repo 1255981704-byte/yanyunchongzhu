@@ -1278,8 +1278,8 @@
 
         function syncModeUI() {
             const badge = document.getElementById('ui-mode-badge');
-            if(appData.mode === 'practice') { badge.innerText = "练习模式"; badge.style.color = "#ccc"; }
-            else { badge.innerText = "真实模式"; badge.style.color = "var(--gold-light)"; }
+            if(appData.mode === 'practice') { badge.innerText = "切换模式"; badge.style.color = "#ccc"; }
+            else { badge.innerText = "切换模式"; badge.style.color = "var(--gold-light)"; }
 
             document.getElementById('dev-panel').style.display = appData.mode === 'practice' ? 'block' : 'none';
             document.getElementById('top-right-ui').style.display = appData.mode === 'real' ? 'flex' : 'none';
