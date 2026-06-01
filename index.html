@@ -40,7 +40,9 @@
             display: flex; flex-direction: column; justify-content: center; align-items: center;
         }
         .login-box { text-align: center; }
-        .login-title { font-size: 42px; color: var(--gold-light); letter-spacing: 10px; margin-bottom: 20px; font-weight: 300; text-shadow: 0 0 20px rgba(223,181,100,0.4); }
+        .login-title { font-size: 42px; color: var(--gold-light); letter-spacing: 10px; margin-bottom: 10px; font-weight: 300; text-shadow: 0 0 20px rgba(223,181,100,0.4); }
+        .login-author { font-size: 14px; color: var(--gold-base); letter-spacing: 3px; margin-bottom: 40px; font-family: sans-serif; opacity: 0.8;}
+        
         .login-sub { font-size: 14px; color: #888; letter-spacing: 2px; margin-bottom: 50px; font-family: sans-serif; }
         .login-btns { display: flex; gap: 40px; justify-content: center; }
         .login-btn {
@@ -50,6 +52,29 @@
             box-shadow: 0 0 15px rgba(0,0,0,0.8), inset 0 0 10px rgba(223,181,100,0.1);
         }
         .login-btn:hover { background: rgba(223,181,100,0.15); transform: translateY(-3px); box-shadow: 0 0 25px rgba(223,181,100,0.3); }
+
+        /* 入场动画特效：时间拉长至3秒，带有强烈的金光消散感 */
+        .intro-anim {
+            animation: introFade 2.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+            pointer-events: none;
+        }
+        @keyframes introFade {
+            0% { opacity: 1; transform: scale(1); filter: blur(0px); }
+            30% { opacity: 0.9; transform: scale(1.05); filter: blur(3px); }
+            100% { opacity: 0; transform: scale(1.5); filter: blur(25px); }
+        }
+
+        /* 遮罩层缓慢褪去，露出背后的武器 */
+        .overlay-fade-out {
+            animation: overlayFade 3s ease-in forwards;
+            pointer-events: none;
+        }
+        @keyframes overlayFade {
+            0% { background: rgba(2, 3, 4, 0.98); }
+            40% { background: rgba(25, 20, 10, 0.8); }
+            80% { background: rgba(223, 181, 100, 0.1); opacity: 1; }
+            100% { background: transparent; opacity: 0; }
+        }
 
         #flash-layer { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #fff; opacity: 0; pointer-events: none; z-index: 9999; transition: opacity 0.5s ease-out; }
 
@@ -314,7 +339,7 @@
         .toast { position: absolute; top: 20%; left: 50%; transform: translate(-50%, -50%); font-size: 15px; color: #fff; background: rgba(0,0,0,0.8); padding: 10px 25px; border-radius: 4px; opacity: 0; pointer-events: none; transition: 0.3s; z-index: 100000; letter-spacing: 1px;}
         .multi-gold-toast { position: absolute; top: 35%; left: 50%; transform: translate(-50%, -50%) scale(0.5); font-size: 40px; color: #fff; letter-spacing: 6px; text-shadow: 0 0 20px var(--gold-base); pointer-events: none; opacity: 0; z-index: 10000; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
 
-        /* 修复后的弹窗层级，必须最高 */
+        /* 弹窗层级 */
         #modal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.85); display: none; justify-content: center; align-items: center; z-index: 1000000; backdrop-filter: blur(5px);}
         .modal-box { background: rgba(20,22,26,0.95); border: 1px solid var(--gold-base); padding: 30px 40px; border-radius: 2px; text-align: center; box-shadow: 0 0 30px rgba(0,0,0,0.8); max-width: 400px; width: 90%; }
         .modal-title { color: #fff; font-size: 16px; line-height: 1.6; margin-bottom: 25px; letter-spacing: 1px;}
@@ -327,7 +352,7 @@
         .dev-line { display: flex; justify-content: space-between; font-size: 13px; color: #ccc; margin-bottom: 10px; }
         .dev-line span:last-child { font-family: monospace; color: #fff; font-size: 14px;}
 
-        /* 商店通用样式 (拓宽了面板以容纳10个格子) */
+        /* 商店通用样式 */
         .shop-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.85); display: none; justify-content: center; align-items: center; z-index: 100000; backdrop-filter: blur(10px);}
         .shop-box { background: rgba(15,18,22,0.95); border: 1px solid var(--gold-base); padding: 40px; border-radius: 4px; text-align: center; box-shadow: 0 0 50px rgba(0,0,0,0.9); width: 600px; }
         .shop-box.wide-box { width: 850px; }
@@ -343,10 +368,16 @@
 </head>
 <body>
 
+    <!-- 音频资源配置区 -->
+    <audio id="snd-reforge" src="重铸.mp3" preload="auto"></audio>
+    <audio id="snd-gold" src="出金.mp3" preload="auto"></audio>
+    <audio id="snd-breakthrough" src="律格.mp3" preload="auto"></audio>
+
     <!-- 登录界面 -->
     <div id="login-overlay">
         <div class="login-box">
             <div class="login-title">武器重铸模拟器</div>
+            <div class="login-author">蛋师傅铁匠铺ver1.0 by伽号&贝贝小兔</div>
             <div class="login-sub">请选择您的模式以进入铁匠铺</div>
             <div class="login-btns">
                 <button class="login-btn" onclick="enterGame('practice')">透视练习</button>
@@ -419,7 +450,7 @@
             <path id="prog-arc-4" class="prog-arc" d="M 835 125 A 450 450 0 0 1 1035 435" />
         </svg>
         
-        <!-- 恢复的精美 SVG 武器视图，默认倾斜悬浮 -->
+        <!-- 武器视图 -->
         <div class="sword-container dim-state" id="sword-obj">
             <div class="sword-flame" id="sword-flame"></div>
             <svg class="real-sword-svg" id="real-sword-svg" viewBox="0 0 1200 500" xmlns="http://www.w3.org/2000/svg">
@@ -863,7 +894,6 @@
                 <g class="weapon-group" id="wp-拳甲" transform="translate(600, 250) scale(0.45)">
                     
                     <g class="base-weapon">
-                        <!-- 居中显示左右甲水印 -->
                         <text x="-260" y="50" fill="#666" font-size="36" font-weight="bold" font-family="var(--font-main)" opacity="0.5" style="letter-spacing: 5px;">左甲</text>
                         <text x="170" y="50" fill="#666" font-size="36" font-weight="bold" font-family="var(--font-main)" opacity="0.5" style="letter-spacing: 5px;">右甲</text>
                     </g>
@@ -1042,7 +1072,6 @@
             </svg>
         </div>
 
-        <!-- 未获取器胚时的购买UI -->
         <div id="buy-weapon-ui">
             <div class="buy-w-title">器胚尚未解锁</div>
             <div class="btn-buy-weapon" onclick="buyCurrentWeapon()">
@@ -1077,7 +1106,6 @@
         </div>
     </div>
 
-    <!-- 暂存面板 -->
     <div class="side-panel scheme-panel" id="scheme-panel">
         <div class="sp-header">
             <div class="sp-title">重铸预览</div>
@@ -1091,7 +1119,6 @@
         </div>
     </div>
 
-    <!-- 藏音阁面板 -->
     <div class="side-panel collection-panel" id="collection-panel">
         <div class="sp-header">
             <div class="sp-title">我的藏音阁</div>
@@ -1101,7 +1128,6 @@
         <div class="list-container" id="collection-list"></div>
     </div>
 
-    <!-- 提示框与输入框 -->
     <div id="modal-overlay">
         <div class="modal-box">
             <div class="modal-title" id="modal-text">提示信息</div>
@@ -1119,7 +1145,6 @@
         <div class="dev-line"><span>预估折算金额</span><span>¥ <span id="dev-rmb">0.0</span></span></div>
     </div>
 
-    <!-- 长明珠充值商店 -->
     <div class="shop-overlay" id="shop-pearl-overlay">
         <div class="shop-box wide-box">
             <div class="shop-title">获取 长明珠</div>
@@ -1139,7 +1164,6 @@
         </div>
     </div>
 
-    <!-- 玄石兑换商店 -->
     <div class="shop-overlay" id="shop-stone-overlay">
         <div class="shop-box">
             <div class="shop-title">兑换 玄石</div>
@@ -1153,7 +1177,6 @@
         </div>
     </div>
 
-    <!-- 八音窍兑换商店 -->
     <div class="shop-overlay" id="shop-bayin-overlay">
         <div class="shop-box">
             <div class="shop-title">兑换 八音窍</div>
@@ -1224,14 +1247,62 @@
 
         let isPanelOpen = false; let isCollectionOpen = false; let isPreviewing = false; let previewData = null; 
         let activeSchemeId = null; let pendingConfirmCallback = null; let isBreakthroughState = false; 
+        let isEnteringGame = false; 
+
+        /* ==== 播放声音 ==== */
+        function playSoundMulti(id) {
+            const orig = document.getElementById(id);
+            if (orig) {
+                const clone = orig.cloneNode(true);
+                clone.volume = orig.volume;
+                clone.play().catch(e => { });
+            }
+        }
+
+        function playSoundSingle(id) {
+            const snd = document.getElementById(id);
+            if (snd) { 
+                snd.currentTime = 0; 
+                snd.play().catch(e => { }); 
+            }
+        }
 
         function enterGame(mode) {
+            if (isEnteringGame) return;
+            isEnteringGame = true;
             appData.mode = mode;
-            document.getElementById('login-overlay').style.display = 'none';
-            syncModeUI();
-            saveData();
-            showToast(mode === 'practice' ? "已进入透视练习模式（无限资源）" : "已进入沉浸真实模式");
-            render();
+            
+            // 入场音效：类似铸剑/揭幕感
+            playSoundSingle('snd-gold');
+
+            // 触发入场动画
+            const loginBox = document.querySelector('.login-box');
+            loginBox.classList.add('intro-anim');
+            
+            const loginOverlay = document.getElementById('login-overlay');
+            loginOverlay.classList.add('overlay-fade-out');
+            
+            const flash = document.getElementById('flash-layer');
+            flash.style.background = 'radial-gradient(circle, rgba(255,255,255,0.8) 0%, rgba(223,181,100,0.5) 50%, transparent 100%)';
+            flash.style.transition = "opacity 2.5s ease-in-out";
+            flash.style.opacity = 0.7;
+
+            // 光芒开始退散
+            setTimeout(() => { flash.style.opacity = 0; }, 500);
+
+            // 完整退散并重置状态 (动画设置了3s)
+            setTimeout(() => {
+                loginOverlay.style.display = 'none';
+                loginOverlay.classList.remove('overlay-fade-out');
+                loginBox.classList.remove('intro-anim'); 
+                flash.style.background = '#fff'; 
+                
+                syncModeUI();
+                saveData();
+                showToast(mode === 'practice' ? "已进入透视练习模式（无限资源）" : "已进入沉浸真实模式");
+                render();
+                isEnteringGame = false;
+            }, 3000); 
         }
         
         function toggleMode() {
@@ -1246,7 +1317,19 @@
                 if (isPanelOpen) renderSchemePanel();
                 
                 let newMode = appData.mode === 'practice' ? 'real' : 'practice';
-                enterGame(newMode);
+                
+                const loginOverlay = document.getElementById('login-overlay');
+                loginOverlay.style.background = 'rgba(2, 3, 4, 0.98)';
+                loginOverlay.style.display = 'flex';
+                loginOverlay.style.opacity = 0;
+                loginOverlay.style.transition = 'opacity 1s ease';
+                void loginOverlay.offsetWidth;
+                loginOverlay.style.opacity = 1;
+                
+                setTimeout(() => {
+                    loginOverlay.style.transition = '';
+                    enterGame(newMode);
+                }, 1000);
             }, "切换模式");
         }
 
@@ -1523,10 +1606,6 @@
             document.getElementById('mini-diamonds').innerHTML = getRarityHtml(renderTarget);
 
             const colorSlot = renderTarget[2]; 
-            const bladeSlot = renderTarget[1]; 
-            const guardSlot = renderTarget[0]; 
-            const handleSlot = renderTarget[3]; 
-            const mingSlot = renderTarget[4];  
             
             if (colorSlot.rank !== 'none') {
                 swordObj.classList.remove('dim-state');
@@ -1753,6 +1832,10 @@
 
         function triggerBreakthrough(targetSlot) {
             isBreakthroughState = true;
+            
+            // 播放突破音效
+            playSoundSingle('snd-breakthrough');
+
             const overlay = document.getElementById('breakthrough-overlay'); const rowContainer = document.getElementById('bt-diamonds-row'); const textSub = document.getElementById('bt-sub-text');
             const logicalOrder = [0, 1, 2, 3, 4]; rowContainer.innerHTML = '';
             
@@ -1778,6 +1861,7 @@
         }
 
         function handleSpaceClick() {
+            if (isEnteringGame) return;
             if (isBreakthroughState) { closeBreakthrough(); return; }
             if (document.getElementById('modal-overlay').style.display === 'flex') { confirmModal(); return; }
 
@@ -1809,7 +1893,7 @@
                             targetSlot.name = rollName(targetSlot.type, targetSlot.rank); rollSubColors(targetSlot);
                         }
                         appData.weaponData.unlockedCount++; 
-                        render(); // 突破前先刷新DOM，确保能抓到目标元素放粒子
+                        render(); 
                         triggerBreakthrough(targetSlot);
                         setTimeout(() => spawnParticles(`slot-${targetSlot.id}`, targetSlot.rank), 50);
                     }
@@ -1827,6 +1911,15 @@
                     mutatedSlots.push({ domId: `slot-${i}`, rank: s.rank });
                 }
             });
+
+            // 音效处理逻辑
+            if (!isBreak) {
+                if (goldsThisTurn > 0) {
+                    playSoundMulti('snd-gold'); 
+                } else {
+                    playSoundMulti('snd-reforge'); 
+                }
+            }
 
             if (goldsThisTurn >= 2) {
                 let swallowed = false;
@@ -1864,6 +1957,7 @@
         }
 
         window.addEventListener('keydown', e => {
+            if (isEnteringGame) return; // 入场动画播放时禁止操作键盘
             if (document.getElementById('login-overlay').style.display === 'flex') return;
             if (e.code === 'Space') { 
                 e.preventDefault(); 
