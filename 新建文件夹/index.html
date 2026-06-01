@@ -380,8 +380,8 @@
             <div class="login-author">蛋师傅铁匠铺ver1.0 by伽号&贝贝小兔</div>
             <div class="login-sub">请选择您的模式以进入铁匠铺</div>
             <div class="login-btns">
-                <button class="login-btn" onclick="enterGame('practice')">透视练习</button>
-                <button class="login-btn" onclick="enterGame('real')">沉浸真实</button>
+                <button class="login-btn" onclick="enterGame('practice', false)">透视练习</button>
+                <button class="login-btn" onclick="enterGame('real', false)">沉浸真实</button>
             </div>
         </div>
     </div>
@@ -401,7 +401,7 @@
 
     <div class="top-left">
         <div class="tl-title" ondblclick="hardResetAccount()">武器重铸模拟器 <span>ver1.0</span></div>
-        <div class="tl-sub">蛋师傅铁匠铺学徒专用 by伽号</div>
+        <div class="tl-sub">蛋师傅铁匠铺学徒专用 by伽号&贝贝小兔</div>
         <div class="controls-group">
             <div class="weapon-selector">
                 <select id="weapon-type-select" onchange="onWeaponChange()">
@@ -1267,15 +1267,24 @@
             }
         }
 
-        function enterGame(mode) {
+        function enterGame(mode, skipAnim = false) {
             if (isEnteringGame) return;
-            isEnteringGame = true;
             appData.mode = mode;
             
-            // 入场音效：类似铸剑/揭幕感
+            if (skipAnim) {
+                // 瞬间切换模式，不播长动画
+                document.getElementById('login-overlay').style.display = 'none';
+                syncModeUI();
+                saveData();
+                showToast(mode === 'practice' ? "已切换至 透视练习模式" : "已切换至 沉浸真实模式");
+                render();
+                return;
+            }
+
+            // 初次进入时播放长动画
+            isEnteringGame = true;
             playSoundSingle('snd-gold');
 
-            // 触发入场动画
             const loginBox = document.querySelector('.login-box');
             loginBox.classList.add('intro-anim');
             
@@ -1317,19 +1326,7 @@
                 if (isPanelOpen) renderSchemePanel();
                 
                 let newMode = appData.mode === 'practice' ? 'real' : 'practice';
-                
-                const loginOverlay = document.getElementById('login-overlay');
-                loginOverlay.style.background = 'rgba(2, 3, 4, 0.98)';
-                loginOverlay.style.display = 'flex';
-                loginOverlay.style.opacity = 0;
-                loginOverlay.style.transition = 'opacity 1s ease';
-                void loginOverlay.offsetWidth;
-                loginOverlay.style.opacity = 1;
-                
-                setTimeout(() => {
-                    loginOverlay.style.transition = '';
-                    enterGame(newMode);
-                }, 1000);
+                enterGame(newMode, true); // true 代表跳过动画瞬间切换
             }, "切换模式");
         }
 
@@ -1342,12 +1339,12 @@
             if (!saved || !appData.weaponData || appData.weaponData.slots.length === 0) { appData.weaponData = initNewWeaponData(appData.weaponType); }
             document.getElementById('weapon-type-select').value = appData.weaponType;
             
-            if (appData.mode) {
-                document.getElementById('login-overlay').style.display = 'none';
-                syncModeUI();
-            } else {
-                document.getElementById('login-overlay').style.display = 'flex';
-            }
+            // 每次页面刷新强制停留在登录界面，不跳过动画
+            const loginOverlay = document.getElementById('login-overlay');
+            loginOverlay.style.display = 'flex';
+            loginOverlay.style.background = 'rgba(2, 3, 4, 0.98)';
+            loginOverlay.style.opacity = '1';
+            
             updateBottomLeftUI();
         }
 
