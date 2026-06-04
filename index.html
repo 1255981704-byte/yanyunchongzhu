@@ -1913,22 +1913,52 @@
         // ==========================================
         // 核心修复区域：暂存方案与当前解锁进度的融合逻辑
         // ==========================================
+        // ==========================================
+        // 核心修复区域：暂存方案与当前解锁进度的融合逻辑
+        // ==========================================
         function previewScheme(id) { 
             let target = id === 'manual' ? appData.schemeData[appData.mode].manual : appData.schemeData[appData.mode].auto[parseInt(id.split('_')[1])]; 
             if (!target) return; 
             activeSchemeId = id; isPreviewing = true; 
             
-            // 基于当前最新进度生成预览数据，防止五孔和其它已解锁孔位退化为暗淡(未贯通)状态
+            // 基于当前最新进度生成预览数据
             previewData = JSON.parse(JSON.stringify(appData.weaponData.slots));
+            let currentUnlocked = appData.weaponData.unlockedCount;
             
-            // 仅把历史方案中“已经解锁(不为none)”的词条属性覆盖上去
-            target.slots.forEach((s, i) => {
-                if (s.rank !== 'none') {
-                    previewData[i].rank = s.rank;
-                    previewData[i].name = s.name;
-                    previewData[i].subColor = s.subColor;
-                    previewData[i].accentColor = s.accentColor;
-                    previewData[i].metalColor = s.metalColor;
+            previewData.forEach((slot, i) => {
+                let oldSlot = target.slots[i]; // 暂存方案中的对应孔位
+                
+                // 1. 判定在【当前的现实世界】中，这个孔位是否已经解锁
+                if (slot.logIdx < currentUnlocked) {
+                    if (oldSlot && oldSlot.rank !== 'none') {
+                        // 【情况A】：旧方案中这个孔已经洗过了，完全继承旧方案的词条
+                        slot.rank = oldSlot.rank;
+                        slot.name = oldSlot.name;
+                        slot.subColor = oldSlot.subColor;
+                        slot.accentColor = oldSlot.accentColor;
+                        slot.metalColor = oldSlot.metalColor;
+                        slot.locked = oldSlot.locked; 
+                    } else {
+                        // 【情况B】：旧方案中没有这个孔（比如三孔方案被五孔现实套用）
+                        if (slot.logIdx === 4) {
+                            // 第五孔：强制固定金色
+                            slot.rank = 'gold';
+                            slot.name = '曜日';
+                            slot.locked = true;
+                            slot.subColor = null; slot.accentColor = null; slot.metalColor = null;
+                        } else {
+                            // 第1~4孔：强制默认给蓝色品质
+                            slot.rank = 'blue';
+                            slot.name = rollName(slot.type, 'blue');
+                            slot.locked = false;
+                            slot.subColor = null; slot.accentColor = null; slot.metalColor = null;
+                        }
+                    }
+                } else {
+                    // 2. 如果在当前现实中根本还没开这个孔，强制屏蔽
+                    slot.rank = 'none';
+                    slot.name = '未贯通';
+                    slot.locked = false;
                 }
             });
 
@@ -1947,6 +1977,7 @@
             saveData(); cancelPreview(); toggleSchemePanel();
             showToast('已成功恢复方案！(已自动为您保留最新开孔进度)');
         }
+        // ==========================================
         // ==========================================
 
         function handleEnterClick() {
