@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>燕云十六声 - 神匠重铸模拟器</title>
+    <title>燕云十六声 - 神匠重铸模拟器 v1.4</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@200;300;400;500;700&display=swap');
 
@@ -17,6 +17,26 @@
             --sword-color: rgba(180, 200, 220, 0.5);
             --sword-glow: rgba(180, 200, 220, 0.2);
         }
+
+        /* ==== [新增] 模糊加载条动画 ==== */
+        #loading-screen {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: #030406; z-index: 2000000;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            transition: opacity 0.8s ease;
+        }
+        .loading-blur-bg {
+            position: absolute; width: 100%; height: 100%;
+            background: radial-gradient(circle at 50% 50%, #1a1e26 0%, #030406 100%);
+            filter: blur(50px); opacity: 0.8;
+        }
+        .loading-content { position: relative; width: 300px; text-align: center; }
+        .loading-text { 
+            color: var(--gold-light); font-size: 14px; letter-spacing: 5px; 
+            margin-bottom: 20px; font-weight: 300; text-shadow: 0 0 15px rgba(223,181,100,0.4);
+        }
+        .loading-bar-bg { width: 100%; height: 2px; background: rgba(255,255,255,0.1); border-radius: 2px; overflow: hidden; }
+        #loading-bar-fill { width: 0%; height: 100%; background: var(--gold-base); box-shadow: 0 0 10px var(--gold-base); transition: width 0.1s linear; }
 
         body {
             margin: 0; padding: 0; width: 100vw; height: 100vh; overflow: hidden;
@@ -136,7 +156,7 @@
         .wn-score { font-size: 16px; color: var(--gold-base); font-weight: 400; font-family: sans-serif;}
 
         /* 三货币系统 UI */
-        .top-right { position: absolute; top: 35px; right: 50px; display: flex; gap: 20px; z-index: 100; }
+        .top-right { position: absolute; top: 35px; right: 50px; display: flex; flex-direction: column; gap: 10px; align-items: flex-end; z-index: 100; }
         .currency-box {
             display: flex; align-items: center; background: rgba(10,12,16,0.6); border: 1px solid rgba(255,255,255,0.05);
             padding: 6px 15px 6px 10px; border-radius: 30px; cursor: pointer; transition: 0.3s; font-family: sans-serif; font-size: 13px; font-weight: normal; backdrop-filter: blur(10px);
@@ -424,6 +444,17 @@
 </head>
 <body>
 
+    <!-- 模糊进度条加载层 -->
+    <div id="loading-screen">
+        <div class="loading-blur-bg"></div>
+        <div class="loading-content">
+            <div class="loading-text">感应剑意中...</div>
+            <div class="loading-bar-container">
+                <div id="loading-progress"></div>
+            </div>
+        </div>
+    </div>
+
     <!-- 音频资源配置区 -->
     <audio id="snd-reforge" src="重铸.mp3" preload="auto"></audio>
     <audio id="snd-gold" src="出金.mp3" preload="auto"></audio>
@@ -433,7 +464,7 @@
     <div id="login-overlay">
         <div class="login-box">
             <div class="login-title">武器重铸模拟器</div>
-            <div class="login-author">蛋师傅铁匠铺 ver1.1 &nbsp;|&nbsp; by 伽号 & 贝贝小兔</div>
+            <div class="login-author">蛋师傅铁匠铺 ver1.4 &nbsp;|&nbsp; by 伽号 & 贝贝小兔</div>
             <div class="login-btns">
                 <button class="login-btn" onclick="enterGame('practice')">学徒重铸练习</button>
                 <button class="login-btn" onclick="enterGame('real')">神匠生涯模拟</button>
@@ -455,7 +486,7 @@
     </div>
 
     <div class="top-left">
-        <div class="tl-title">武器重铸模拟器 <span>ver1.1</span></div>
+        <div class="tl-title">武器重铸模拟器 <span>ver1.4</span></div>
         <div class="tl-sub">
             <div class="tl-sub-text">蛋师傅铁匠铺学徒专用 &nbsp;|&nbsp; by 伽号</div>
         </div>
@@ -482,19 +513,25 @@
     
     <div class="weapon-name-ui">
         <div class="wn-title" id="ui-wn-title"></div>
-        <div class="wn-id">风华：<span id="ui-total-score">2120</span></div>
+        <div class="wn-id">风华值：<span id="ui-total-score">2120</span></div>
     </div>
 
     <!-- 三货币系统 UI (仅真实模式) -->
     <div class="top-right" id="top-right-ui" style="display: none;">
-        <div class="currency-box" onclick="openShop('pearl')">
-            <div class="curr-icon icon-pearl"></div> <span id="ui-pearls">0</span> <span class="curr-add">+</span>
+        <div style="display: flex; gap: 20px;">
+            <div class="currency-box" onclick="openShop('pearl')">
+                <div class="curr-icon icon-pearl"></div> <span id="ui-pearls">0</span> <span class="curr-add">+</span>
+            </div>
+            <div class="currency-box" onclick="openShop('stone')">
+                <div class="curr-icon icon-stone"></div> <span id="ui-balance">0</span> <span class="curr-add">+</span>
+            </div>
+            <div class="currency-box" onclick="openShop('bayin')">
+                <div class="curr-icon icon-bayin"></div> <span id="ui-bayin">0</span> <span class="curr-add">+</span>
+            </div>
         </div>
-        <div class="currency-box" onclick="openShop('stone')">
-            <div class="curr-icon icon-stone"></div> <span id="ui-balance">0</span> <span class="curr-add">+</span>
-        </div>
-        <div class="currency-box" onclick="openShop('bayin')">
-            <div class="curr-icon icon-bayin"></div> <span id="ui-bayin">0</span> <span class="curr-add">+</span>
+        <div class="recharge-display" style="margin-top: 10px; font-size: 12px; color: #888; text-align: right; letter-spacing: 1px;">
+            账号价值(累投): ¥ <span id="ui-total-value" style="color: var(--gold-base); font-family: sans-serif; font-size: 14px;">0</span>
+            <div style="font-size:10px; color:#555; margin-top:4px;">(1长明珠=16.6元 | 1八音窍=1450元)</div>
         </div>
     </div>
 
@@ -1202,12 +1239,12 @@
     <!-- 新增角色管理弹窗 -->
     <div class="shop-overlay" id="char-manager-overlay">
         <div class="shop-box" style="width: 450px; padding: 40px;">
-            <div class="shop-title" style="margin-bottom: 25px; font-size: 22px;">角色档案库</div>
+            <div class="shop-title" style="margin-bottom: 25px; font-size: 22px;">生涯档案库</div>
             <div id="char-list-container" style="max-height: 250px; overflow-y: auto; margin-bottom: 25px; text-align: left; border-top: 1px solid rgba(255,255,255,0.05); border-bottom: 1px solid rgba(255,255,255,0.05); padding: 10px 0;">
                 <!-- 列表动态生成 -->
             </div>
             <div style="display: flex; gap: 20px; justify-content: center;">
-                <button class="sp-btn confirm" style="padding: 12px 30px; flex:none;" onclick="createNewChar()">招募新工匠</button>
+                <button class="sp-btn confirm" style="padding: 12px 30px; flex:none;" onclick="createNewChar()">新建生涯</button>
                 <button class="sp-btn cancel" style="padding: 12px 30px; flex:none;" onclick="closeCharManager()">关 闭</button>
             </div>
         </div>
@@ -1316,14 +1353,14 @@
         const OLD_STORAGE_KEY = 'yysls_reforge_data_v4_0';
 
         let appData = {};
-        let globalData = { activeCharId: 'char_1', chars: { 'char_1': { name: '默认工匠', data: {} } } };
+        let globalData = { activeCharId: 'char_1', chars: { 'char_1': { name: '默认生涯', data: {} } } };
 
         let isPanelOpen = false; let isCollectionOpen = false; let isPreviewing = false; let previewData = null; 
         let activeSchemeId = null; let pendingConfirmCallback = null; let isBreakthroughState = false; 
 
         function getDefaultAppData() {
             return {
-                mode: '', pearls: 0, balance: 0, bayin: 0, totalSpent: 0, ownedWeapons: [],
+                mode: '', pearls: 0, balance: 0, bayin: 0, totalSpent: 0, ownedWeapons: [], totalRechargePearls: 0,
                 weaponType: '剑', weaponData: initNewWeaponData('剑'),
                 schemeData: { practice: {manual: null, auto: []}, real: {manual: null, auto: []} },
                 collection: { practice: [], real: [] }
@@ -1339,7 +1376,7 @@
                 let initialData = oldSaved ? JSON.parse(oldSaved) : getDefaultAppData();
                 globalData = {
                     activeCharId: 'char_1',
-                    chars: { 'char_1': { name: '默认工匠', data: initialData } }
+                    chars: { 'char_1': { name: '默认生涯', data: initialData } }
                 };
             }
             
@@ -1357,8 +1394,7 @@
             document.getElementById('weapon-type-select').value = appData.weaponType;
             document.getElementById('current-char-name').innerText = globalData.chars[globalData.activeCharId].name;
             
-            const loginOverlay = document.getElementById('login-overlay');
-            loginOverlay.style.display = 'flex';
+            document.getElementById('login-overlay').style.display = 'flex';
             
             updateBottomLeftUI();
         }
@@ -1368,22 +1404,22 @@
             localStorage.setItem(GLOBAL_STORAGE_KEY, JSON.stringify(globalData)); 
         }
 
+        /* 解决克隆音频在部分浏览器会丢失引用的问题，直接 new Audio 保证重叠音效正常播放 */
         function playSoundMulti(id) {
             const orig = document.getElementById(id);
-            if (orig) {
-                const clone = orig.cloneNode(true);
-                if(id === 'snd-reforge') clone.volume = 0.3;
-                if(id === 'snd-gold') clone.volume = 0.5;
-                clone.play().catch(e => { });
+            if (orig && orig.src) {
+                const audio = new Audio(orig.src);
+                audio.volume = id === 'snd-reforge' ? 0.3 : 0.5;
+                audio.play().catch(e => { console.warn('音频播放受阻:', e); });
             }
         }
 
         function playSoundSingle(id) {
-            const snd = document.getElementById(id);
-            if (snd) { 
-                snd.volume = 0.4;
-                snd.currentTime = 0; 
-                snd.play().catch(e => { }); 
+            const orig = document.getElementById(id);
+            if (orig && orig.src) { 
+                const audio = new Audio(orig.src);
+                audio.volume = 0.4;
+                audio.play().catch(e => { console.warn('音频播放受阻:', e); }); 
             }
         }
 
@@ -1433,18 +1469,15 @@
             if (isCollectionOpen) renderCollection();
             updateBottomLeftUI();
             
-            if (!appData.mode) {
-                document.getElementById('login-overlay').style.display = 'flex';
-            } else {
-                document.getElementById('login-overlay').style.display = 'none';
-            }
-            showToast(`已切换至角色：${globalData.chars[charId].name}`);
+            // 每次切换生涯也强制显示模式选择
+            document.getElementById('login-overlay').style.display = 'flex';
+            showToast(`已切换至档案：${globalData.chars[charId].name}`);
         }
 
         function createNewChar() {
             closeCharManager();
             setTimeout(() => {
-                showPrompt("请输入新工匠的姓名：", "工匠_" + Math.floor(Math.random() * 1000), (name) => {
+                showPrompt("请输入新生涯的名称：", "生涯_" + Math.floor(Math.random() * 1000), (name) => {
                     if(!name.trim()) name = "无名小匠";
                     let newCharId = 'char_' + Date.now();
                     globalData.chars[newCharId] = {
@@ -1456,7 +1489,22 @@
             }, 100);
         }
 
-        function enterGame(mode, skipAnim = false) {
+        function enterGame(mode, force = false) {
+            // 如果上一次保存的模式存在，且和本次点击选择的不一致，给予二次警告提示
+            if (appData.mode && appData.mode !== mode && !force) {
+                let nextMode = mode === 'practice' ? '学徒重铸练习' : '神匠生涯模拟';
+                showModal(`检测到该生涯上次为不同模式，切换至【${nextMode}】<br><span style="color:#ff4040;font-size:13px;">将完全重置当前武器的重铸进度与暂存方案！</span><br>是否继续？`, () => {
+                    appData.totalSpent = 0; 
+                    appData.weaponData = initNewWeaponData(appData.weaponType); 
+                    const names = WEAPON_TYPES[appData.weaponType];
+                    appData.weaponData.slots.forEach((s, i) => { s.type = names[i]; });
+                    if (isPanelOpen) renderSchemePanel();
+                    
+                    enterGame(mode, true);
+                }, "确认切换");
+                return;
+            }
+
             appData.mode = mode;
             document.getElementById('login-overlay').style.display = 'none';
             syncModeUI();
@@ -1541,12 +1589,22 @@
 
         function getElementalColorHex(name) {
             if (name.includes('默认')) return '#a8ddec'; 
+            if (name.includes('龙渊')) return '#1a3a6d'; 
+            if (name.includes('桃晶')) return '#ff9a9e'; 
+            if (name.includes('冰泉')) return '#a5f3fc'; 
+            if (name.includes('红锦')) return '#e11d48'; 
+            if (name.includes('黑曜')) return '#1e293b'; 
+            if (name.includes('碧玉')) return '#059669'; 
+            if (name.includes('黄金')) return '#fbbf24'; 
+            if (name.includes('珍珠')) return '#f8fafc'; 
+            if (name.includes('紫琉')) return '#7c3aed';
+            
             if (name.includes('紫') || name.includes('藤') || name.includes('杜鹃') || name.includes('幽响') || name.includes('清光') || name.includes('宵影')) return '#be5aff';
             if (name.includes('红') || name.includes('炼虹') || name.includes('胭脂') || name.includes('锦') || name.includes('惊梦') || name.includes('焚歌') || name.includes('劫烬')) return '#ff4040';
             if (name.includes('冰') || name.includes('蓝') || name.includes('水') || name.includes('青') || name.includes('潜蛟') || name.includes('海清') || name.includes('碧落') || name.includes('烛烟')) return '#40c0ff';
             if (name.includes('金') || name.includes('黄') || name.includes('桃') || name.includes('擎冰') || name.includes('太真') || name.includes('腾光') || name.includes('银汉') || name.includes('九霄') || name.includes('亢龙')) return '#ffdf50';
             if (name.includes('黑') || name.includes('墨') || name.includes('鸦') || name.includes('暗') || name.includes('玄籁')) return '#8020b0';
-            if (name.includes('白') || name.includes('珍珠') || name.includes('贝') || name.includes('素冰') || name.includes('霜月') || name.includes('清仪')) return '#ffffff';
+            if (name.includes('白') || name.includes('贝') || name.includes('素冰') || name.includes('霜月') || name.includes('清仪')) return '#ffffff';
             if (name.includes('玉') || name.includes('绿') || name.includes('草') || name.includes('微草') || name.includes('春泽') || name.includes('逸羽')) return '#40ff80'; 
             return '#a8ddec';
         }
@@ -1704,6 +1762,11 @@
                 document.getElementById('ui-pearls').innerText = appData.pearls;
                 document.getElementById('ui-balance').innerText = appData.balance;
                 document.getElementById('ui-bayin').innerText = appData.bayin;
+                if (document.getElementById('ui-total-value')) {
+                    // 更新账号价值
+                    let totalVal = ((appData.totalRechargePearls || 0) * 16.6 + (appData.bayin || 0) * 1450).toFixed(1);
+                    document.getElementById('ui-total-value').innerText = totalVal;
+                }
                 return;
             } else {
                 document.getElementById('slots-container').style.display = 'block';
@@ -1779,6 +1842,13 @@
             document.getElementById('ui-pearls').innerText = appData.pearls;
             document.getElementById('ui-balance').innerText = appData.balance;
             document.getElementById('ui-bayin').innerText = appData.bayin;
+            
+            if (document.getElementById('ui-total-value')) {
+                // 更新账号价值，明确标识出算法
+                let totalVal = ((appData.totalRechargePearls || 0) * 16.6 + (appData.bayin || 0) * 1450).toFixed(1);
+                document.getElementById('ui-total-value').innerText = totalVal;
+            }
+
             document.getElementById('dev-stones').innerText = appData.totalSpent;
             document.getElementById('dev-rmb').innerText = (appData.totalSpent * 200 / 12).toFixed(1);
         }
@@ -1797,7 +1867,9 @@
         function closeShop(type) { document.getElementById(`shop-${type}-overlay`).style.display = 'none'; }
         
         function buyPearls(amount, rmb) { 
-            appData.pearls += amount; saveData(); render(); closeShop('pearl'); 
+            appData.pearls += amount; 
+            appData.totalRechargePearls = (appData.totalRechargePearls || 0) + amount;
+            saveData(); render(); closeShop('pearl'); 
             showToast(`充值成功！获得 ${amount} 长明珠`); 
         }
 
@@ -1809,7 +1881,9 @@
                     if (isNaN(rmb) || rmb <= 0) { showToast("请输入有效的金额！"); return; }
                     if (rmb > 1000000) rmb = 1000000;
                     let pearls = rmb * 12; 
-                    appData.pearls += pearls; saveData(); render();
+                    appData.pearls += pearls; 
+                    appData.totalRechargePearls = (appData.totalRechargePearls || 0) + pearls;
+                    saveData(); render();
                     showToast(`充值成功！获得 ${pearls} 长明珠`);
                 });
             }, 100);
@@ -1875,7 +1949,7 @@
 
         function createSchemeItemHtml(title, sch, id) {
             let diamondsHtml = getRarityHtml(sch.slots); let isActive = activeSchemeId === id ? 'active' : '';
-            return `<div class="list-item ${isActive}" onclick="previewScheme('${id}')"><div class="si-title"><span>${title}</span><span class="si-tag">预览中</span></div><div class="si-content"><div class="mini-diamonds" style="margin:0">${diamondsHtml}</div><div class="si-score">评分 ${sch.score}</div></div></div>`;
+            return `<div class="list-item ${isActive}" onclick="previewScheme('${id}')"><div class="si-title"><span>${title}</span><span class="si-tag">预览中</span></div><div class="si-content"><div class="mini-diamonds" style="margin:0">${diamondsHtml}</div><div class="si-score">风华值 ${sch.score}</div></div></div>`;
         }
 
         function renderSchemePanel() {
@@ -1910,28 +1984,19 @@
             if (currentModeScheme.auto.length > 5) currentModeScheme.auto.pop();
         }
 
-        // ==========================================
-        // 核心修复区域：暂存方案与当前解锁进度的融合逻辑
-        // ==========================================
-        // ==========================================
-        // 核心修复区域：暂存方案与当前解锁进度的融合逻辑
-        // ==========================================
         function previewScheme(id) { 
             let target = id === 'manual' ? appData.schemeData[appData.mode].manual : appData.schemeData[appData.mode].auto[parseInt(id.split('_')[1])]; 
             if (!target) return; 
             activeSchemeId = id; isPreviewing = true; 
             
-            // 基于当前最新进度生成预览数据
             previewData = JSON.parse(JSON.stringify(appData.weaponData.slots));
             let currentUnlocked = appData.weaponData.unlockedCount;
             
             previewData.forEach((slot, i) => {
-                let oldSlot = target.slots[i]; // 暂存方案中的对应孔位
+                let oldSlot = target.slots[i]; 
                 
-                // 1. 判定在【当前的现实世界】中，这个孔位是否已经解锁
                 if (slot.logIdx < currentUnlocked) {
                     if (oldSlot && oldSlot.rank !== 'none') {
-                        // 【情况A】：旧方案中这个孔已经洗过了，完全继承旧方案的词条
                         slot.rank = oldSlot.rank;
                         slot.name = oldSlot.name;
                         slot.subColor = oldSlot.subColor;
@@ -1939,15 +2004,12 @@
                         slot.metalColor = oldSlot.metalColor;
                         slot.locked = oldSlot.locked; 
                     } else {
-                        // 【情况B】：旧方案中没有这个孔（比如三孔方案被五孔现实套用）
                         if (slot.logIdx === 4) {
-                            // 第五孔：强制固定金色
                             slot.rank = 'gold';
                             slot.name = '曜日';
                             slot.locked = true;
                             slot.subColor = null; slot.accentColor = null; slot.metalColor = null;
                         } else {
-                            // 第1~4孔：强制默认给蓝色品质
                             slot.rank = 'blue';
                             slot.name = rollName(slot.type, 'blue');
                             slot.locked = false;
@@ -1955,7 +2017,6 @@
                         }
                     }
                 } else {
-                    // 2. 如果在当前现实中根本还没开这个孔，强制屏蔽
                     slot.rank = 'none';
                     slot.name = '未贯通';
                     slot.locked = false;
@@ -1972,13 +2033,10 @@
         
         function restoreScheme() {
             if (!previewData) return;
-            // 将融合了最新孔位进度的 previewData 保存为当前实际数据
             appData.weaponData.slots = JSON.parse(JSON.stringify(previewData));
             saveData(); cancelPreview(); toggleSchemePanel();
             showToast('已成功恢复方案！(已自动为您保留最新开孔进度)');
         }
-        // ==========================================
-        // ==========================================
 
         function handleEnterClick() {
             if (!appData.ownedWeapons.includes(appData.weaponType) && appData.mode === 'real') return;
@@ -1986,7 +2044,7 @@
             const currentScore = calcScore(targetSlots);
             const defaultName = WEAPON_TITLES[appData.weaponType];
             
-            showPrompt(`为极品神兵题名收录：<br><span style="font-size:12px; color:#aaa; font-weight:300; margin-top:10px; display:inline-block; letter-spacing:1px;">当前风华评分：<span style="color:var(--gold-base); font-family:sans-serif;">${currentScore}</span></span>`, defaultName, (customName) => {
+            showPrompt(`为极品神兵题名收录：<br><span style="font-size:12px; color:#aaa; font-weight:300; margin-top:10px; display:inline-block; letter-spacing:1px;">当前风华值：<span style="color:var(--gold-base); font-family:sans-serif;">${currentScore}</span></span>`, defaultName, (customName) => {
                 const cloneSlots = JSON.parse(JSON.stringify(targetSlots));
                 appData.collection[appData.mode].unshift({
                     id: Date.now(), type: appData.weaponType, title: customName, score: currentScore, slots: cloneSlots,
@@ -2012,18 +2070,26 @@
 
             if (currentCollection.length === 0) { list.innerHTML = `<div style="color:#666; text-align:center; margin-top:50px; font-size:13px; font-weight:300; letter-spacing:2px;">暂无收录<br><br>在主界面按 [Enter] 即可主动收录。</div>`; return; }
             const colorMap = { 'gold': '#dfb564', 'purple': '#a675ca', 'blue': '#6daecc', 'none': '#666' };
-            const logOrder = [1, 2, 0, 3, 4]; 
+            const logOrder = [0, 1, 2, 3, 4]; // 保证颜色(logIdx为0)被写在最前
             
             currentCollection.forEach(c => {
                 let gridHtml = logOrder.map(logIdx => {
                     let s = c.slots.find(x => x.logIdx === logIdx);
+                    if(!s) return '';
                     let col = colorMap[s.rank]; let t = s.rank === 'none' ? '未贯通' : formatDispName(s.name);
-                    return `<div class="col-grid-row"><span style="color:#888;">${s.type}</span> <span style="color:${col};">${t}</span></div>`;
+                    
+                    if (logIdx === 0 && s.rank === 'gold') {
+                        let extra = `<div style="font-size:10px; color:#aaa; margin-top:4px; display:flex; justify-content:space-between;"><span>金属: <span style="color:var(--gold-base)">${s.metalColor||'无'}</span></span><span>点缀: <span style="color:var(--gold-base)">${s.accentColor||'无'}</span></span><span>辅色: <span style="color:var(--gold-base)">${s.subColor||'无'}</span></span></div>`;
+                        return `<div class="col-grid-row" style="flex-direction:column; background:rgba(223,181,100,0.1); padding:8px; border-radius:2px; margin-bottom:4px; border-bottom:1px solid rgba(223,181,100,0.2);"><div style="display:flex; justify-content:space-between;"><span style="color:#888;">${s.type}</span> <span style="color:${col}; font-weight:bold;">${t}</span></div>${extra}</div>`;
+                    } else if (logIdx === 0) {
+                        return `<div class="col-grid-row" style="background:rgba(255,255,255,0.05); padding:5px; border-radius:2px;"><span style="color:#888;">${s.type}</span> <span style="color:${col};">${t}</span></div>`;
+                    }
+                    return `<div class="col-grid-row" style="padding:2px 0;"><span style="color:#888;">${s.type}</span> <span style="color:${col};">${t}</span></div>`;
                 }).join('');
 
                 list.innerHTML += `
                     <div class="col-item">
-                        <div class="col-top"><span class="col-title">${c.title}</span><span class="col-score">风华: ${c.score}</span></div>
+                        <div class="col-top"><span class="col-title">${c.title}</span><span class="col-score">风华值: ${c.score}</span></div>
                         <div class="col-grid">${gridHtml}</div>
                         <div class="col-cost-info">耗石：<span>${c.costStones}</span>折合：<span>¥ ${c.costRMB}</span></div>
                         <div class="col-date">${c.date}</div>
@@ -2070,7 +2136,6 @@
         }
 
         function doReforgeAction() {
-            // 如果玩家在预览旧方案的状态下直接点重铸，自动退出预览，基于最新的现实进度继续
             if (isPreviewing) {
                 cancelPreview();
             }
@@ -2182,7 +2247,57 @@
             if (e.code === 'F5') { e.preventDefault(); handleResetClick(); }
         });
 
-        window.onload = () => { loadData(); initDOM(); render(); };
+        // 统一在页面加载完后执行加载动画
+        window.onload = () => { 
+            let globalSaved = localStorage.getItem(GLOBAL_STORAGE_KEY);
+            if (globalSaved) { 
+                globalData = JSON.parse(globalSaved); 
+            } else {
+                let oldSaved = localStorage.getItem(OLD_STORAGE_KEY);
+                let initialData = oldSaved ? JSON.parse(oldSaved) : getDefaultAppData();
+                globalData = {
+                    activeCharId: 'char_1',
+                    chars: { 'char_1': { name: '默认生涯', data: initialData } }
+                };
+            }
+            appData = globalData.chars[globalData.activeCharId].data;
+
+            if (!appData.ownedWeapons) appData.ownedWeapons = [];
+            if (!appData.bayin) appData.bayin = 0;
+            if (!appData.collection) appData.collection = { practice: [], real: [] };
+            if (!appData.schemeData) appData.schemeData = { practice: {manual: null, auto: []}, real: {manual: null, auto: []} };
+            if (!appData.weaponData || !appData.weaponData.slots || appData.weaponData.slots.length === 0) { 
+                appData.weaponData = initNewWeaponData(appData.weaponType || '剑'); 
+            }
+            if (!appData.weaponType) appData.weaponType = '剑';
+
+            document.getElementById('weapon-type-select').value = appData.weaponType;
+            document.getElementById('current-char-name').innerText = globalData.chars[globalData.activeCharId].name;
+            updateBottomLeftUI();
+            initDOM(); 
+            render(); 
+
+            // 执行加载动画，加载满后判断是否需要显示登录页
+            const fill = document.getElementById('loading-progress');
+            let progress = 0;
+            const timer = setInterval(() => {
+                progress += Math.random() * 20;
+                if (progress >= 100) {
+                    progress = 100;
+                    clearInterval(timer);
+                    setTimeout(() => {
+                        const screen = document.getElementById('loading-screen');
+                        screen.style.opacity = '0';
+                        setTimeout(() => screen.remove(), 800);
+                        
+                        // 强制每次进入都显示选择模式界面
+                        document.getElementById('login-overlay').style.display = 'flex';
+                        syncModeUI();
+                    }, 500);
+                }
+                fill.style.width = Math.min(progress, 100) + '%';
+            }, 100);
+        };
     </script>
 </body>
 </html>
