@@ -504,6 +504,7 @@
                     <option value="陌刀">武器类型：陌刀</option>
                     <option value="拳甲">武器类型：拳甲</option>
                     <option value="弓">武器类型：弓</option>
+                    <option value="鼓">武器类型：鼓</option> <!-- 新增 鼓 -->
                 </select>
             </div>
             <!-- 模式切换按钮 -->
@@ -1165,7 +1166,122 @@
                         </g>
                     </g>
                 </g>
+<!-- 8. 鼓 -->
+                <g class="weapon-group" id="wp-鼓" transform="translate(600, 200) scale(0.55)">
+                    <g class="base-weapon">
+                        <!-- 基础暗影 -->
+                        <path d="M -100 0 L -100 350 M 100 0 L 100 350" stroke="#444" stroke-width="40" fill="none" opacity="0.3"/>
+                        <ellipse cx="0" cy="-150" rx="120" ry="40" fill="#444" opacity="0.3"/>
+                    </g>
+                    
+                    <!-- 左绡 -->
+                    <g class="weapon-part weapon-part-blade">
+                        <g class="sway-gentle">
+                            <!-- 绸缎主体 -->
+                            <path d="M -110 -20 Q -140 180 -120 380 L -80 380 Q -60 180 -90 -20 Z" fill="url(#umb-paperBase)" filter="drop-shadow(0 10px 10px rgba(0,0,0,0.5))"/>
+                            <path d="M -100 0 Q -115 180 -100 370" fill="none" stroke="url(#umb-gold)" stroke-width="6" opacity="0.8"/>
+                            <path d="M -100 0 Q -115 180 -100 370" fill="none" stroke="#fff" stroke-width="2" stroke-dasharray="10 5" opacity="0.9"/>
+                            <!-- 绡上的玉饰点缀 -->
+                            <circle cx="-105" cy="80" r="4" fill="url(#glassJade)" stroke="url(#umb-gold)" stroke-width="1.5"/>
+                            <circle cx="-108" cy="200" r="4" fill="url(#glassJade)" stroke="url(#umb-gold)" stroke-width="1.5"/>
+                            <circle cx="-105" cy="320" r="4" fill="url(#glassJade)" stroke="url(#umb-gold)" stroke-width="1.5"/>
+                            <!-- 顶部金玉装饰 -->
+                            <path d="M -100 -50 C -140 -80, -160 -10, -100 10 C -40 -10, -60 -80, -100 -50 Z" fill="url(#celestialGold)"/>
+                            <path d="M -100 -30 C -120 -50, -130 -10, -100 0 C -70 -10, -80 -50, -100 -30 Z" fill="#fff" opacity="0.8"/>
+                            <circle cx="-100" cy="-15" r="10" fill="url(#umb-jade)" filter="url(#bloomGlow)"/>
+                            <circle cx="-100" cy="-15" r="4" fill="#fff"/>
+                        </g>
+                    </g>
 
+                    <!-- 右绡 -->
+                    <g class="weapon-part weapon-part-guard">
+                        <g class="sway-gentle" style="animation-delay: -3s;">
+                            <!-- 绸缎主体 -->
+                            <path d="M 90 -20 Q 60 180 80 380 L 120 380 Q 140 180 110 -20 Z" fill="url(#umb-paperBase)" filter="drop-shadow(0 10px 10px rgba(0,0,0,0.5))"/>
+                            <path d="M 100 0 Q 85 180 100 370" fill="none" stroke="url(#umb-gold)" stroke-width="6" opacity="0.8"/>
+                            <path d="M 100 0 Q 85 180 100 370" fill="none" stroke="#fff" stroke-width="2" stroke-dasharray="10 5" opacity="0.9"/>
+                            <!-- 绡上的玉饰点缀 -->
+                            <circle cx="95" cy="80" r="4" fill="url(#glassJade)" stroke="url(#umb-gold)" stroke-width="1.5"/>
+                            <circle cx="92" cy="200" r="4" fill="url(#glassJade)" stroke="url(#umb-gold)" stroke-width="1.5"/>
+                            <circle cx="95" cy="320" r="4" fill="url(#glassJade)" stroke="url(#umb-gold)" stroke-width="1.5"/>
+                            <!-- 顶部金玉装饰 -->
+                            <path d="M 100 -50 C 60 -80, 40 -10, 100 10 C 160 -10, 140 -80, 100 -50 Z" fill="url(#celestialGold)"/>
+                            <path d="M 100 -30 C 80 -50, 70 -10, 100 0 C 130 -10, 120 -50, 100 -30 Z" fill="#fff" opacity="0.8"/>
+                            <circle cx="100" cy="-15" r="10" fill="url(#umb-jade)" filter="url(#bloomGlow)"/>
+                            <circle cx="100" cy="-15" r="4" fill="#fff"/>
+                        </g>
+                    </g>
+
+                    <!-- 腰鼓 -->
+                    <g class="weapon-part weapon-part-handle">
+                        <g transform="translate(0, -180) rotate(-10)">
+                            <g filter="drop-shadow(0 15px 20px rgba(0,0,0,0.6))">
+                                <!-- 鼓身 -->
+                                <path d="M -140 -40 Q 0 -20 140 -40 L 140 40 Q 0 20 -140 40 Z" fill="url(#umb-paperBase)"/>
+                                <path d="M -140 -40 Q 0 -20 140 -40 L 140 40 Q 0 20 -140 40 Z" fill="url(#umb-jade)" opacity="0.3"/>
+                                
+                                <!-- 鼓身金饰蔓延 -->
+                                <path d="M -80 -30 Q 0 20 80 -30" fill="none" stroke="url(#celestialGold)" stroke-width="8"/>
+                                <path d="M -80 30 Q 0 -20 80 30" fill="none" stroke="url(#celestialGold)" stroke-width="8"/>
+                                
+                                <!-- 中心玉环 -->
+                                <ellipse cx="0" cy="0" rx="35" ry="45" fill="none" stroke="url(#umb-jade)" stroke-width="12"/>
+                                <ellipse cx="0" cy="0" rx="40" ry="50" fill="none" stroke="url(#celestialGold)" stroke-width="3"/>
+                                <ellipse cx="0" cy="0" rx="30" ry="40" fill="none" stroke="url(#celestialGold)" stroke-width="3"/>
+                                <circle cx="0" cy="20" r="8" fill="url(#celestialGold)"/>
+
+                                <!-- 左鼓面 -->
+                                <ellipse cx="-140" cy="0" rx="20" ry="65" fill="#fdf8e7" stroke="url(#umb-gold)" stroke-width="8"/>
+                                <ellipse cx="-140" cy="0" rx="14" ry="59" fill="none" stroke="url(#umb-jade)" stroke-width="2"/>
+                                
+                                <!-- 右鼓面 -->
+                                <ellipse cx="140" cy="0" rx="20" ry="65" fill="#fdf8e7" stroke="url(#umb-gold)" stroke-width="8"/>
+                                <ellipse cx="140" cy="0" rx="14" ry="59" fill="none" stroke="url(#umb-jade)" stroke-width="2"/>
+                                
+                                <!-- 鼓钉 -->
+                                <circle cx="-140" cy="-65" r="4" fill="url(#celestialGold)"/>
+                                <circle cx="-140" cy="65" r="4" fill="url(#celestialGold)"/>
+                                <circle cx="-158" cy="0" r="4" fill="url(#celestialGold)"/>
+                                <circle cx="140" cy="-65" r="4" fill="url(#celestialGold)"/>
+                                <circle cx="140" cy="65" r="4" fill="url(#celestialGold)"/>
+                                <circle cx="158" cy="0" r="4" fill="url(#celestialGold)"/>
+
+                                <!-- 下垂的珠缀 -->
+                                <path d="M -40 40 Q 0 80 40 40" fill="none" stroke="#fff" stroke-width="2" stroke-dasharray="3 3"/>
+                                <path d="M 0 60 L 0 120" stroke="url(#celestialGold)" stroke-width="2"/>
+                                <circle cx="0" cy="120" r="6" fill="url(#umb-jade)"/>
+                                <path d="M -4 126 L 4 126 L 0 150 Z" fill="url(#celestialGold)"/>
+                            </g>
+                        </g>
+                    </g>
+
+                    <!-- 明光 (光晕与气韵) -->
+                    <g class="weapon-part weapon-part-core">
+                        <g class="spirit-pulse">
+                            <!-- 环绕腰鼓的仙气流光 -->
+                            <path d="M -220 -250 C -150 -300, -50 -100, -200 -120" fill="none" stroke="var(--sword-color)" stroke-width="12" stroke-linecap="round" opacity="0.6" filter="url(#bloomGlow)"/>
+                            <path d="M -220 -250 C -150 -300, -50 -100, -200 -120" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" opacity="0.8"/>
+                            
+                            <path d="M 220 -200 C 150 -300, 50 -150, 200 -100" fill="none" stroke="var(--sword-color)" stroke-width="12" stroke-linecap="round" opacity="0.6" filter="url(#bloomGlow)"/>
+                            <path d="M 220 -200 C 150 -300, 50 -150, 200 -100" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" opacity="0.8"/>
+                        </g>
+
+                        <g class="spin-slow" opacity="0.8">
+                            <ellipse cx="0" cy="-180" rx="180" ry="70" fill="none" stroke="var(--sword-glow)" stroke-width="2" stroke-dasharray="15 10" filter="url(#bloomGlow)"/>
+                        </g>
+
+                        <!-- 漂浮粒子 -->
+                        <g fill="var(--sword-color)" filter="url(#bloomGlow)">
+                            <circle cx="-150" cy="-280" r="5" class="particle p1" fill="#fff"/>
+                            <circle cx="180" cy="-250" r="4" class="particle p2"/>
+                            <circle cx="-50" cy="-100" r="3" class="particle p3"/>
+                            <circle cx="100" cy="-80" r="6" class="particle p4" fill="#fff"/>
+                            <circle cx="0" cy="-250" r="4" class="particle p5"/>
+                            <circle cx="-200" cy="0" r="3" class="particle p1"/>
+                            <circle cx="200" cy="50" r="5" class="particle p2" fill="#fff"/>
+                        </g>
+                    </g>
+                </g>
             </svg>
         </div>
 
@@ -1303,16 +1419,17 @@
     <div class="toast" id="toast"></div>
 
     <script>
-        const WEAPON_TITLES = {
+     const WEAPON_TITLES = {
             '剑': '藏音·龙跃霄汉', '枪': '藏音·昆山玉碎', '二代伞': '藏音·星河欲曙', '二代扇': '藏音·觉蒙天风',
-            '唐刀': '藏音·羲和敲日', '陌刀': '藏音·万古悲尘', '拳甲': '藏音·丹霄清鸣', '弓': '藏音·凤凰于飞'
+            '唐刀': '藏音·羲和敲日', '陌刀': '藏音·万古悲尘', '拳甲': '藏音·丹霄清鸣', '弓': '藏音·凤凰于飞', '鼓': '藏音·霓裳清响'
         };
 
-        const WEAPON_TYPES = {
+     const WEAPON_TYPES = {
             '剑': ['剑颚', '剑刃', '颜色', '剑柄', '明光'], '枪': ['枪杆', '枪头', '颜色', '枪套', '明光'],
             '二代伞': ['伞饰', '伞面', '颜色', '伞底', '明光'], '二代扇': ['扇骨', '扇面', '颜色', '扇坠', '明光'],
             '唐刀': ['刀柄', '刀刃', '颜色', '环首', '明光'], '陌刀': ['刀鄂', '刀头', '颜色', '刀杆', '明光'],
-            '拳甲': ['右甲', '左甲', '颜色', '掌隼', '明光'], '弓': ['握弦', '弓身', '颜色', '箭矢', '明光']
+            '拳甲': ['右甲', '左甲', '颜色', '掌隼', '明光'], '弓': ['握弦', '弓身', '颜色', '箭矢', '明光'],
+            '鼓': ['右绡', '左绡', '颜色', '腰鼓', '明光'] // <== 新增
         };
 
         const SLOT_DEFS =[
@@ -1321,7 +1438,7 @@
             { type: '明光', align: 'right', logicalIndex: 4 } 
         ];
 
-        const WEAPON_SETS = {
+      const WEAPON_SETS = {
             '剑': { blue: ['负岳'], purple: ['蟠枝', '衔锋'], gold: ['炼虹', '擎冰'] },
             '枪': { blue: ['套装一·潜蛟'], purple: ['套装一·清光', '套装二·素冰'], gold: ['套装一·九霄', '套装二·亢龙'] },
             '二代伞': { blue: ['套装一·欢宴'], purple: ['套装一·惊梦', '套装二·玉颜'], gold: ['套装一·碧落', '套装二·太真'] },
@@ -1329,7 +1446,8 @@
             '唐刀': { blue: ['套装一·烛烟'], purple: ['套装一·海清', '套装二·劫烬'], gold: ['套装一·霜月', '套装二·焚羲'] },
             '陌刀': { blue: ['套装一·石火'], purple: ['套装一·阆风', '套装二·酌酒'], gold: ['套装一·宵梦', '套装二·西荒'] },
             '拳甲': { blue: ['套装一·琤琮'], purple: ['套装一·幽响', '套装二·云韶'], gold: ['套装一·焚歌', '套装二·玄籁'] },
-            '弓': { blue: ['套装一·逸羽'], purple: ['套装一·宵影', '套装二·晨晖'], gold: ['套装一·清仪', '套装二·腾光'] }
+            '弓': { blue: ['套装一·逸羽'], purple: ['套装一·宵影', '套装二·晨晖'], gold: ['套装一·清仪', '套装二·腾光'] },
+            '鼓': { blue: ['套装一·苎萝'], purple: ['套装一·冰坼', '套装二·虹裳'], gold: ['套装一·昭阳', '套装二·翔鸾'] }
         };
 
         const COMMON_COLORS = {
@@ -1587,7 +1705,7 @@
             }
         }
 
-        function getElementalColorHex(name) {
+ function getElementalColorHex(name) {
             if (name.includes('默认')) return '#a8ddec'; 
             if (name.includes('龙渊')) return '#1a3a6d'; 
             if (name.includes('桃晶')) return '#ff9a9e'; 
@@ -1599,13 +1717,13 @@
             if (name.includes('珍珠')) return '#f8fafc'; 
             if (name.includes('紫琉')) return '#7c3aed';
             
-            if (name.includes('紫') || name.includes('藤') || name.includes('杜鹃') || name.includes('幽响') || name.includes('清光') || name.includes('宵影')) return '#be5aff';
-            if (name.includes('红') || name.includes('炼虹') || name.includes('胭脂') || name.includes('锦') || name.includes('惊梦') || name.includes('焚歌') || name.includes('劫烬')) return '#ff4040';
-            if (name.includes('冰') || name.includes('蓝') || name.includes('水') || name.includes('青') || name.includes('潜蛟') || name.includes('海清') || name.includes('碧落') || name.includes('烛烟')) return '#40c0ff';
-            if (name.includes('金') || name.includes('黄') || name.includes('桃') || name.includes('擎冰') || name.includes('太真') || name.includes('腾光') || name.includes('银汉') || name.includes('九霄') || name.includes('亢龙')) return '#ffdf50';
+            if (name.includes('紫') || name.includes('藤') || name.includes('杜鹃') || name.includes('幽响') || name.includes('清光') || name.includes('宵影') || name.includes('翔鸾')) return '#be5aff';
+            if (name.includes('红') || name.includes('炼虹') || name.includes('胭脂') || name.includes('锦') || name.includes('惊梦') || name.includes('焚歌') || name.includes('劫烬') || name.includes('虹裳')) return '#ff4040';
+            if (name.includes('冰') || name.includes('蓝') || name.includes('水') || name.includes('青') || name.includes('潜蛟') || name.includes('海清') || name.includes('碧落') || name.includes('烛烟') || name.includes('冰坼')) return '#40c0ff';
+            if (name.includes('金') || name.includes('黄') || name.includes('桃') || name.includes('擎冰') || name.includes('太真') || name.includes('腾光') || name.includes('银汉') || name.includes('九霄') || name.includes('亢龙') || name.includes('昭阳')) return '#ffdf50';
             if (name.includes('黑') || name.includes('墨') || name.includes('鸦') || name.includes('暗') || name.includes('玄籁')) return '#8020b0';
             if (name.includes('白') || name.includes('贝') || name.includes('素冰') || name.includes('霜月') || name.includes('清仪')) return '#ffffff';
-            if (name.includes('玉') || name.includes('绿') || name.includes('草') || name.includes('微草') || name.includes('春泽') || name.includes('逸羽')) return '#40ff80'; 
+            if (name.includes('玉') || name.includes('绿') || name.includes('草') || name.includes('微草') || name.includes('春泽') || name.includes('逸羽') || name.includes('苎萝')) return '#40ff80'; 
             return '#a8ddec';
         }
 
