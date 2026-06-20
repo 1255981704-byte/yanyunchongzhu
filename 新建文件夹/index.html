@@ -440,6 +440,81 @@
         .shop-price { font-size: 12px; color: var(--gold-base); font-family: sans-serif; font-weight: normal; letter-spacing: 1px;}
         .btn-close-shop { background: transparent; border: 1px solid rgba(255,255,255,0.1); color: #888; padding: 10px 40px; cursor: pointer; transition: 0.3s ease; border-radius: 2px; font-size: 13px; font-weight: 300; letter-spacing: 2px;}
         .btn-close-shop:hover { background: rgba(255,255,255,0.05); color: #fff;}
+/* ========================================= */
+        /*          手机端兼容适配 (Mobile UI)         */
+        /* ========================================= */
+        @media screen and (max-width: 850px) {
+            /* 1. 动态缩放中心舞台，配合JS计算的 scale 变量 */
+            .center-scene {
+                transform: translate(-50%, -50%) scale(var(--scene-scale, 0.28)) !important;
+            }
+            /* 手机端打开侧边栏时，场景不发生左右偏移，直接被遮盖 */
+            .scheme-panel.show ~ .center-scene,
+            .collection-panel.show ~ .center-scene { left: 50% !important; }
+            .scheme-panel.show ~ .bottom-right-keys { right: 10px !important; }
+
+            /* 2. 顶部 UI 紧凑排布 */
+            .top-left { top: 15px; left: 15px; }
+            .tl-title { font-size: 16px; margin-bottom: 5px; }
+            .tl-sub-text { font-size: 10px; margin-bottom: 10px; }
+            .btn-char-manage { font-size: 11px; padding: 6px 12px; }
+            .controls-group { flex-direction: column; align-items: flex-start; gap: 10px; }
+            .weapon-selector select { font-size: 12px; padding: 6px 10px; padding-right: 25px; }
+            .mode-badge { font-size: 11px; padding: 5px 12px; }
+
+            /* 3. 货币信息排布 */
+            .top-right { top: 15px; right: 15px; flex-direction: column; gap: 8px; align-items: flex-end; }
+            .currency-box { padding: 4px 10px; font-size: 11px; }
+            .curr-icon { width: 14px; height: 14px; margin-right: 5px; }
+            .recharge-display { font-size: 10px; }
+
+            /* 4. 武器名称调整 */
+            .weapon-name-ui { top: 160px; right: 15px; }
+            .wn-title { font-size: 24px; letter-spacing: 4px; }
+            .wn-id, .wn-score { font-size: 12px; }
+
+            /* 5. 底部按键转换成可触摸的大按钮 */
+            .bottom-left-keys { bottom: 20px; left: 15px; flex-direction: column; gap: 12px; }
+            .bottom-right-keys { bottom: 20px; right: 15px; flex-direction: column; gap: 12px; }
+            .key-item { 
+                background: rgba(223,181,100,0.15); border: 1px solid rgba(223,181,100,0.4);
+                padding: 10px 15px; border-radius: 4px; color: #fff; font-size: 13px;
+                backdrop-filter: blur(10px); justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            }
+            .key-btn { display: none; } /* 隐藏原有的 F5 / Space 键盘图标 */
+
+            /* 6. 底部主重铸按钮 */
+            .bottom-center { bottom: 35px; }
+            .btn-reforge { padding: 12px 30px 12px 25px; border-radius: 30px; }
+            .btn-text { font-size: 18px; letter-spacing: 4px; }
+            .btn-cost { font-size: 16px; margin-left: 20px; }
+
+            /* 7. 扩大孔位的触摸热区 (防止缩放后点不到) */
+            .slot::after { content: ''; position: absolute; top: -35px; bottom: -35px; left: -35px; right: -35px; z-index: 1; }
+
+            /* 8. 侧边栏和弹窗全屏化/自适应 */
+            .side-panel { width: 100vw; padding: 20px 15px; }
+            .scheme-panel { right: -100vw; }
+            .collection-panel { left: -100vw; }
+            
+            .shop-box, .modal-box { width: 90vw !important; padding: 25px 15px; box-sizing: border-box; }
+            .shop-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 10px; }
+            
+            .login-box { width: 90vw; }
+            .login-title { font-size: 32px; letter-spacing: 6px; }
+            .login-btns { flex-direction: column; gap: 15px; align-items: center;}
+            .login-btn { padding: 12px 30px; width: 80%; }
+
+            #buy-weapon-ui { padding: 25px 20px; width: 85%; }
+            .buy-w-title { font-size: 20px; }
+
+            .bt-title { font-size: 26px; letter-spacing: 8px; margin-left: 0; }
+            .bt-sub { font-size: 12px; letter-spacing: 2px; text-align: center; }
+            .bt-diamonds-row { gap: 12px; }
+            .bt-diamond { width: 20px; height: 20px; }
+
+            .dev-panel { display: none !important; } /* 手机端隐藏调试面板以节省空间 */
+        }
     </style>
 </head>
 <body>
@@ -2424,7 +2499,26 @@
             if (e.code === 'KeyC') { e.preventDefault(); toggleCollectionPanel(); }
             if (e.code === 'F5') { e.preventDefault(); handleResetClick(); }
         });
-
+// =========================================
+        // 动态计算舞台缩放比例 (适配所有尺寸设备)
+        // =========================================
+        function resizeScene() {
+            const isMobile = window.innerWidth <= 850;
+            let scale = 1;
+            if (isMobile) {
+                // 手机端：以 1400px 为基准按屏幕宽度等比缩放，留出少量边距
+                scale = (window.innerWidth / 1400) * 0.95; 
+            } else if (window.innerWidth < 1400) {
+                // 小屏电脑/平板等比缩放
+                scale = window.innerWidth / 1400;
+            }
+            // 将缩放值注入到 CSS 变量中
+            document.documentElement.style.setProperty('--scene-scale', scale);
+        }
+        // 监听窗口大小改变
+        window.addEventListener('resize', resizeScene);
+        // 初始化执行一次
+        resizeScene();
         // 统一在页面加载完后执行加载动画
         window.onload = () => { 
             let globalSaved = localStorage.getItem(GLOBAL_STORAGE_KEY);
