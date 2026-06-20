@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>燕云十六声 - 神匠重铸模拟器 v1.4</title>
+    <title>燕云十六声 - 神匠重铸模拟器 v1.5</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@200;300;400;500;700&display=swap');
 
@@ -444,14 +444,10 @@
         /*          手机端兼容适配 (Mobile UI)         */
         /* ========================================= */
         @media screen and (max-width: 850px) {
-            /* 1. 动态缩放中心舞台，配合JS计算的 scale 变量 */
-            .center-scene {
-                transform: translate(-50%, -50%) scale(var(--scene-scale, 0.28)) !important;
-            }
-            /* 手机端打开侧边栏时，场景不发生左右偏移，直接被遮盖 */
+            /* 1. 动态缩放中心舞台 */
+            .center-scene { transform: translate(-50%, -50%) scale(var(--scene-scale, 0.28)) !important; }
             .scheme-panel.show ~ .center-scene,
             .collection-panel.show ~ .center-scene { left: 50% !important; }
-            .scheme-panel.show ~ .bottom-right-keys { right: 10px !important; }
 
             /* 2. 顶部 UI 紧凑排布 */
             .top-left { top: 15px; left: 15px; }
@@ -466,39 +462,55 @@
             .top-right { top: 15px; right: 15px; flex-direction: column; gap: 8px; align-items: flex-end; }
             .currency-box { padding: 4px 10px; font-size: 11px; }
             .curr-icon { width: 14px; height: 14px; margin-right: 5px; }
-            .recharge-display { font-size: 10px; }
 
             /* 4. 武器名称调整 */
             .weapon-name-ui { top: 160px; right: 15px; }
             .wn-title { font-size: 24px; letter-spacing: 4px; }
             .wn-id, .wn-score { font-size: 12px; }
 
-            /* 5. 底部按键转换成可触摸的大按钮 */
-            .bottom-left-keys { bottom: 20px; left: 15px; flex-direction: column; gap: 12px; }
-            .bottom-right-keys { bottom: 20px; right: 15px; flex-direction: column; gap: 12px; }
+            /* 5. 底部左右操作按键（缩小、抬高、防止超屏） */
+            .bottom-left-keys { bottom: 95px; left: 10px; flex-direction: column; gap: 10px; align-items: flex-start; z-index: 1000; }
+            .bottom-right-keys { bottom: 95px; right: 10px; flex-direction: column; gap: 10px; align-items: flex-end; z-index: 1000; }
             .key-item { 
-                background: rgba(223,181,100,0.15); border: 1px solid rgba(223,181,100,0.4);
-                padding: 10px 15px; border-radius: 4px; color: #fff; font-size: 13px;
+                background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15);
+                padding: 8px 12px; border-radius: 4px; color: #eee; font-size: 11px;
                 backdrop-filter: blur(10px); justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+                white-space: nowrap; /* 保证不换行 */
             }
-            .key-btn { display: none; } /* 隐藏原有的 F5 / Space 键盘图标 */
+            .key-item .key-btn { display: none; } /* 隐藏左右角的小键盘键位提示 */
+
+            /* ================= 重点修复：金色的【确认/收录】按钮 ================= */
+            .bottom-right-keys .key-item:last-child {
+                background: linear-gradient(135deg, rgba(223,181,100,0.3) 0%, rgba(20,10,0,0.8) 100%);
+                border: 1px solid var(--gold-base);
+                color: var(--gold-light);
+                font-size: 13px; /* 单独把收录按钮字号放大 */
+                padding: 10px 18px;
+                box-shadow: 0 0 15px rgba(223,181,100,0.3);
+            }
 
             /* 6. 底部主重铸按钮 */
-            .bottom-center { bottom: 35px; }
-            .btn-reforge { padding: 12px 30px 12px 25px; border-radius: 30px; }
-            .btn-text { font-size: 18px; letter-spacing: 4px; }
-            .btn-cost { font-size: 16px; margin-left: 20px; }
+            .bottom-center { bottom: 25px; width: 85vw; }
+            .btn-reforge { padding: 10px 20px; border-radius: 30px; width: 100%; justify-content: center; box-sizing: border-box; }
+            .btn-text { font-size: 16px; letter-spacing: 2px; }
+            .btn-cost { font-size: 15px; margin-left: 15px; }
 
-            /* 7. 扩大孔位的触摸热区 (防止缩放后点不到) */
+            /* 7. 弹窗(确认提示/商店)缩放到屏幕内 */
+            .modal-box, .shop-box { width: 85vw !important; padding: 25px 20px !important; box-sizing: border-box; }
+            .modal-btns { gap: 15px; }
+            /* 保证弹窗里的确认取消按钮正常显示 */
+            .modal-btns .key-btn { display: inline-block; padding: 10px 25px; font-size: 14px; border-radius: 4px; width: auto; }
+            #modal-input { font-size: 14px; padding: 10px; width: 100%; box-sizing: border-box; }
+            
+            .shop-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 10px; }
+
+            /* 8. 扩大孔位的触摸热区 (防止手指点不到孔位) */
             .slot::after { content: ''; position: absolute; top: -35px; bottom: -35px; left: -35px; right: -35px; z-index: 1; }
 
-            /* 8. 侧边栏和弹窗全屏化/自适应 */
+            /* 9. 侧边栏及其他UI全屏化适配 */
             .side-panel { width: 100vw; padding: 20px 15px; }
             .scheme-panel { right: -100vw; }
             .collection-panel { left: -100vw; }
-            
-            .shop-box, .modal-box { width: 90vw !important; padding: 25px 15px; box-sizing: border-box; }
-            .shop-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 10px; }
             
             .login-box { width: 90vw; }
             .login-title { font-size: 32px; letter-spacing: 6px; }
@@ -507,13 +519,35 @@
 
             #buy-weapon-ui { padding: 25px 20px; width: 85%; }
             .buy-w-title { font-size: 20px; }
-
             .bt-title { font-size: 26px; letter-spacing: 8px; margin-left: 0; }
             .bt-sub { font-size: 12px; letter-spacing: 2px; text-align: center; }
             .bt-diamonds-row { gap: 12px; }
             .bt-diamond { width: 20px; height: 20px; }
 
-            .dev-panel { display: none !important; } /* 手机端隐藏调试面板以节省空间 */
+            .dev-panel { display: none !important; }
+        }
+
+#weapon-select-overlay {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(3, 4, 6, 0.98); z-index: 999999; backdrop-filter: blur(20px);
+            display: none; flex-direction: column; justify-content: center; align-items: center;
+        }
+        .ws-item {
+            background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05);
+            padding: 30px 10px; border-radius: 4px; cursor: pointer; transition: all 0.3s ease;
+            display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px;
+        }
+        .ws-item:hover {
+            background: rgba(223,181,100,0.1); border-color: rgba(223,181,100,0.4);
+            transform: translateY(-4px); box-shadow: 0 10px 25px rgba(0,0,0,0.6);
+        }
+        .ws-name { font-size: 20px; color: #eee; letter-spacing: 4px; font-weight: 300; }
+        .ws-status { font-size: 12px; color: var(--gold-base); font-family: sans-serif; font-weight: normal; }
+        
+        /* 兼顾手机端显示 */
+        @media screen and (max-width: 850px) {
+            #weapon-select-overlay .shop-box { width: 95vw !important; padding: 25px 15px !important; }
+            #weapon-select-overlay .shop-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 10px; }
         }
     </style>
 </head>
@@ -539,14 +573,25 @@
     <div id="login-overlay">
         <div class="login-box">
             <div class="login-title">武器重铸模拟器</div>
-            <div class="login-author">蛋师傅铁匠铺 ver1.4 &nbsp;|&nbsp; by 伽号 & 贝贝小兔</div>
-            <div class="login-btns">
-                <button class="login-btn" onclick="enterGame('practice')">学徒重铸练习</button>
-                <button class="login-btn" onclick="enterGame('real')">神匠生涯模拟</button>
+            <div class="login-author">蛋师傅铁匠铺 ver1.5 &nbsp;|&nbsp; by 伽号 & 贝贝小兔</div>
+           <div class="login-btns">
+                <button class="login-btn" onclick="showWeaponSelect('practice')">学徒重铸练习</button>
+                <button class="login-btn" onclick="showWeaponSelect('real')">神匠生涯模拟</button>
             </div>
         </div>
     </div>
-
+<!-- 武器选择界面 -->
+    <div id="weapon-select-overlay">
+        <div class="shop-box wide-box" style="width: 800px; padding: 40px;">
+            <div class="shop-title" style="margin-bottom: 30px;">请选择需感应的器胚</div>
+            <div class="shop-grid" style="grid-template-columns: repeat(4, 1fr);" id="ws-grid">
+                <!-- 武器列表由 JS 动态生成 -->
+            </div>
+            <div style="margin-top:30px;">
+                <button class="sp-btn cancel" style="padding: 12px 50px;" onclick="cancelWeaponSelect()">返 回</button>
+            </div>
+        </div>
+    </div>
     <!-- 侧边栏外部点击遮罩 -->
     <div class="panel-backdrop" id="panel-backdrop" onclick="closeAllPanels()"></div>
 
@@ -561,7 +606,7 @@
     </div>
 
     <div class="top-left">
-        <div class="tl-title">武器重铸模拟器 <span>ver1.4</span></div>
+        <div class="tl-title">武器重铸模拟器 <span>ver1.5</span></div>
         <div class="tl-sub">
             <div class="tl-sub-text">蛋师傅铁匠铺学徒专用 &nbsp;|&nbsp; by  伽号 & 贝贝小兔</div>
         </div>
@@ -1681,7 +1726,57 @@
                 }, "创 建");
             }, 100);
         }
+let pendingMode = ''; // 记录玩家想进的是练习还是真实模式
 
+        // 1. 弹出武器选择面板
+        function showWeaponSelect(mode) {
+            pendingMode = mode;
+            document.getElementById('login-overlay').style.display = 'none';
+            document.getElementById('weapon-select-overlay').style.display = 'flex';
+            
+            const grid = document.getElementById('ws-grid');
+            grid.innerHTML = '';
+            
+            // 遍历所有武器生成面板
+            const weapons = Object.keys(WEAPON_TYPES);
+            weapons.forEach(w => {
+                // 判断是否已拥有该武器（练习模式全解锁）
+                let isOwned = appData.ownedWeapons.includes(w) || pendingMode === 'practice';
+                let statusText = isOwned ? '✅ 免费 / 已解锁' : '🔒 需 1 八音窍';
+                let color = isOwned ? 'var(--gold-base)' : '#888';
+                
+                // [修改处]：获取长名字，如 "藏音·龙跃霄汉"
+                let fullTitle = WEAPON_TITLES[w] || w;
+                
+                grid.innerHTML += `
+                    <div class="ws-item" onclick="confirmWeaponSelect('${w}')">
+                        <!-- [修改处]：这里原本是 ${w}，改为了 ${fullTitle}，并稍微缩小了字号防止文字太长换行 -->
+                        <div class="ws-name" style="font-size: 15px; letter-spacing: 2px;">${fullTitle}</div>
+                        <div class="ws-status" style="color: ${color}">${statusText}</div>
+                    </div>
+                `;
+            });
+        }
+
+        // 2. 取消并返回
+        function cancelWeaponSelect() {
+            document.getElementById('weapon-select-overlay').style.display = 'none';
+            document.getElementById('login-overlay').style.display = 'flex';
+        }
+
+        // 3. 确认选择并进入游戏
+        function confirmWeaponSelect(weaponName) {
+            document.getElementById('weapon-select-overlay').style.display = 'none';
+            
+            // 如果玩家选的武器跟之前存的不一样，触发换武器操作 (覆盖旧数据)
+            if (appData.weaponType !== weaponName) {
+                document.getElementById('weapon-type-select').value = weaponName;
+                onWeaponChange(); 
+            }
+            
+            // 真正进入游戏
+            enterGame(pendingMode);
+        }
         function enterGame(mode, force = false) {
             // 如果上一次保存的模式存在，且和本次点击选择的不一致，给予二次警告提示
             if (appData.mode && appData.mode !== mode && !force) {
