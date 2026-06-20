@@ -5,6 +5,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>燕云十六声 - 神匠重铸模拟器 v1.5</title>
     <style>
+
+/* ========================================= */
+        /*   当面板打开时，隐藏所有底层悬浮 UI 按钮  */
+        /* ========================================= */
+        body.panel-open .top-left,
+        body.panel-open .top-right,
+        body.panel-open .weapon-name-ui,
+        body.panel-open .bottom-left-keys,
+        body.panel-open .bottom-right-keys,
+        body.panel-open .bottom-center {
+            display: none !important;
+            pointer-events: none !important;
+        }
+        
+        /* 手机端打开面板时，顺便把背景彻底变纯黑，挡住武器模型 */
+        @media screen and (max-width: 850px) {
+            body.panel-open .center-scene {
+                display: none !important;
+            }
+            .panel-backdrop {
+                background: rgba(3, 4, 6, 0.98) !important;
+            }
+        }
         @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@200;300;400;500;700&display=swap');
 
         :root {
@@ -583,7 +606,7 @@
 <!-- 武器选择界面 -->
     <div id="weapon-select-overlay">
         <div class="shop-box wide-box" style="width: 800px; padding: 40px;">
-            <div class="shop-title" style="margin-bottom: 30px;">请选择需感应的器胚</div>
+            <div class="shop-title" style="margin-bottom: 30px;">请选择需重铸的武器</div>
             <div class="shop-grid" style="grid-template-columns: repeat(4, 1fr);" id="ws-grid">
                 <!-- 武器列表由 JS 动态生成 -->
             </div>
@@ -2221,20 +2244,52 @@ let pendingMode = ''; // 记录玩家想进的是练习还是真实模式
             if(isCollectionOpen) toggleCollectionPanel();
         }
 
-        function toggleSchemePanel() {
+       function toggleSchemePanel() {
             if(isCollectionOpen) toggleCollectionPanel(); 
             const panel = document.getElementById('scheme-panel'); const scene = document.getElementById('center-scene'); const bottom = document.getElementById('bottom-center'); const bd = document.getElementById('panel-backdrop');
             isPanelOpen = !isPanelOpen;
-            if (isPanelOpen) { panel.classList.add('show'); scene.style.left = 'calc(50% - 190px)'; bottom.style.left = 'calc(50% - 190px)'; bd.style.display = 'block'; bd.style.opacity = '1'; renderSchemePanel(); } 
-            else { panel.classList.remove('show'); scene.style.left = '50%'; bottom.style.left = '50%'; bd.style.opacity = '0'; setTimeout(()=> bd.style.display = 'none', 400); if (isPreviewing) cancelPreview(); }
+            if (isPanelOpen) { 
+                panel.classList.add('show'); scene.style.left = 'calc(50% - 190px)'; bottom.style.left = 'calc(50% - 190px)'; bd.style.display = 'block'; bd.style.opacity = '1'; 
+                
+                // [新增] 触发隐藏其他所有按钮
+                document.body.classList.add('panel-open'); 
+                
+                renderSchemePanel(); 
+            } 
+            else { 
+                panel.classList.remove('show'); scene.style.left = '50%'; bottom.style.left = '50%'; bd.style.opacity = '0'; 
+                
+                // [新增] 延迟 400ms(等动画播完) 恢复所有按钮
+                setTimeout(()=> { 
+                    bd.style.display = 'none'; 
+                    document.body.classList.remove('panel-open'); 
+                }, 400); 
+                
+                if (isPreviewing) cancelPreview(); 
+            }
         }
 
         function toggleCollectionPanel() {
             if(isPanelOpen) toggleSchemePanel(); 
             const panel = document.getElementById('collection-panel'); const scene = document.getElementById('center-scene'); const bottom = document.getElementById('bottom-center'); const bd = document.getElementById('panel-backdrop');
             isCollectionOpen = !isCollectionOpen;
-            if (isCollectionOpen) { panel.classList.add('show'); scene.style.left = 'calc(50% + 190px)'; bottom.style.left = 'calc(50% + 190px)'; bd.style.display = 'block'; bd.style.opacity = '1'; renderCollection(); } 
-            else { panel.classList.remove('show'); scene.style.left = '50%'; bottom.style.left = '50%'; bd.style.opacity = '0'; setTimeout(()=> bd.style.display = 'none', 400); }
+            if (isCollectionOpen) { 
+                panel.classList.add('show'); scene.style.left = 'calc(50% + 190px)'; bottom.style.left = 'calc(50% + 190px)'; bd.style.display = 'block'; bd.style.opacity = '1'; 
+                
+                // [新增] 触发隐藏其他所有按钮
+                document.body.classList.add('panel-open'); 
+                
+                renderCollection(); 
+            } 
+            else { 
+                panel.classList.remove('show'); scene.style.left = '50%'; bottom.style.left = '50%'; bd.style.opacity = '0'; 
+                
+                // [新增] 延迟 400ms(等动画播完) 恢复所有按钮
+                setTimeout(()=> { 
+                    bd.style.display = 'none'; 
+                    document.body.classList.remove('panel-open'); 
+                }, 400); 
+            }
         }
 
         function createSchemeItemHtml(title, sch, id) {
