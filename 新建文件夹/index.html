@@ -524,6 +524,35 @@
             .bt-diamonds-row { gap: 12px; }
             .bt-diamond { width: 20px; height: 20px; }
 
+/* 10. 针对大屏手机极限调优：进一步放大并整体下移 */
+            .global-arc-svg, #slots-container {
+                transform-origin: center;
+                /* 圆弧突破拉大到 1.05 倍，向右偏移量相应增加到 85px 确保左侧文字不被切除 */
+                transform: translateX(85px) scale(1.05) !important;
+            }
+
+            /* 文字反向字号微调，配合 1.05 的高放大率，保证最终视觉依然舒适且不拥挤 */
+            .track-arc { stroke-width: 1.5 !important; stroke-dasharray: 5 10 !important; }
+            .prog-arc { stroke-width: 3.5 !important; }
+
+            .slot-icon { width: 42px !important; height: 42px !important; }
+            .diamond::after { width: 10px !important; height: 10px !important; border-radius: 2px !important;}
+            
+            .slot-name { font-size: 32px !important; margin-top: 5px !important; }
+            .slot-type { font-size: 18px !important; }
+            .slot-extra { font-size: 14px !important; margin-top: 8px !important; line-height: 1.4; }
+            .slot { gap: 14px !important; }
+            .svg-lock { width: 24px !important; height: 24px !important; }
+            
+            /* 【修改点】：整个舞台从 45% 下移到 52%，武器和孔位会一起下沉，给顶部留出充裕空间 */
+            .center-scene { top: 52% !important; } 
+
+            /* 保持长武器适度缩小，防止剑尖/枪尖戳出屏幕 */
+            #wp-剑, #wp-枪, #wp-唐刀, #wp-陌刀 {
+                transform-origin: center;
+                transform: translate(0, 50px) scale(0.85) !important;
+            }
+
          /* 11. 手机端：消耗统计收纳为按钮，点击弹出 */
             .dev-toggle-btn { display: flex !important; }
             
