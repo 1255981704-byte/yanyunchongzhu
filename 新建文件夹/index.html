@@ -30,29 +30,30 @@
             .panel-backdrop {
                 background: rgba(3, 4, 6, 0.98) !important;
             }
-/* 10. 全新调优：缩小圆弧整体并右移，同时大幅放大文字保证清晰可读 */
+/* 10. 针对大屏手机(如iPhone 16 Pro Max)调优：弧线更大，位置向右修正 */
             .global-arc-svg, #slots-container {
                 transform-origin: center;
-                /* 圆弧整体缩小至 0.75 倍，并向右偏移 45px (拉回屏幕内) */
-                transform: translateX(45px) scale(0.75) !important;
+                /* 圆弧放大到 0.9 倍（原先为0.75），向右偏移 65px (为左侧孔位的长文字腾出足够空间) */
+                transform: translateX(65px) scale(0.9) !important;
             }
 
-            /* 反向大幅放大孔位里的内容，抵消缩放，保证手机上清晰 */
-            .track-arc { stroke-width: 2.5 !important; stroke-dasharray: 6 12 !important; }
-            .prog-arc { stroke-width: 4.5 !important; }
+            /* 因为圆弧本身变大了，我们需要把原本过于夸张的文字倍数调回正常的黄金比例 */
+            .track-arc { stroke-width: 2 !important; stroke-dasharray: 6 12 !important; }
+            .prog-arc { stroke-width: 4 !important; }
 
-            .slot-icon { width: 56px !important; height: 56px !important; }
-            .diamond::after { width: 14px !important; height: 14px !important; border-radius: 2px !important;}
+            .slot-icon { width: 48px !important; height: 48px !important; }
+            .diamond::after { width: 12px !important; height: 12px !important; border-radius: 2px !important;}
             
-            .slot-name { font-size: 46px !important; margin-top: 8px !important; }
-            .slot-type { font-size: 26px !important; }
-            .slot-extra { font-size: 20px !important; margin-top: 14px !important; line-height: 1.4; }
-            .slot { gap: 24px !important; }
-            .svg-lock { width: 34px !important; height: 34px !important; }
+            .slot-name { font-size: 38px !important; margin-top: 6px !important; }
+            .slot-type { font-size: 22px !important; }
+            /* 副词条（颜色、金属等）字号调整，防止太长换行 */
+            .slot-extra { font-size: 16px !important; margin-top: 10px !important; line-height: 1.4; }
+            .slot { gap: 18px !important; }
+            .svg-lock { width: 28px !important; height: 28px !important; }
             
-            .center-scene { top: 45% !important; } /* 位置微调 */
+            .center-scene { top: 45% !important; } /* 舞台位置微调 */
 
-            /* 保持长武器适度缩小，其余短武器维持原比例 */
+            /* 依然保持长武器适度缩小，不然武器尖端会刺出屏幕 */
             #wp-剑, #wp-枪, #wp-唐刀, #wp-陌刀 {
                 transform-origin: center;
                 transform: translate(0, 50px) scale(0.85) !important;
