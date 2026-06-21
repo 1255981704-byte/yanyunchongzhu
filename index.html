@@ -27,26 +27,27 @@
             .panel-backdrop {
                 background: rgba(3, 4, 6, 0.98) !important;
             }
-/* 10. 放大中心舞台的主体视觉，解决武器和文字太小的问题 */
-            /* 增粗圆弧线条 */
-            .track-arc { stroke-width: 3 !important; stroke-dasharray: 8 16 !important; }
-            .prog-arc { stroke-width: 4.5 !important; }
+/* 10. 视觉回调适配 */
+            /* 适度放大圆弧与孔位，配合 1.15 的倍率 */
+            .track-arc { stroke-width: 2 !important; stroke-dasharray: 6 12 !important; }
+            .prog-arc { stroke-width: 3.5 !important; }
 
-            /* 放大孔位图标和中心光点 */
-            .slot-icon { width: 48px !important; height: 48px !important; }
-            .diamond::after { width: 12px !important; height: 12px !important; border-radius: 2px !important;}
+            .slot-icon { width: 36px !important; height: 36px !important; }
+            .diamond::after { width: 10px !important; height: 10px !important; border-radius: 2px !important;}
             
-            /* 成倍放大孔位名称和副词条文字 */
-            .slot-name { font-size: 36px !important; margin-top: 6px !important; }
-            .slot-type { font-size: 22px !important; }
-            .slot-extra { font-size: 18px !important; margin-top: 12px !important; line-height: 1.5; }
-            .slot { gap: 24px !important; }
-            .svg-lock { width: 28px !important; height: 28px !important; }
+            .slot-name { font-size: 28px !important; margin-top: 5px !important; }
+            .slot-type { font-size: 18px !important; }
+            .slot-extra { font-size: 14px !important; margin-top: 10px !important; line-height: 1.4; }
+            .slot { gap: 16px !important; }
+            .svg-lock { width: 22px !important; height: 22px !important; }
+            
+            .center-scene { top: 46% !important; } /* 位置微调 */
 
-            /* 微调武器位置偏上一点，避免放大后遮挡底部的重铸按键 */
-            .center-scene { top: 43% !important; }
-        }
-        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@200;300;400;500;700&display=swap');
+            /* [新增] 专门针对手机端，把剑、枪、刀这类长武器单独缩小，防止溢出屏幕 */
+            #wp-剑, #wp-枪, #wp-唐刀, #wp-陌刀 {
+                transform-origin: center;
+                transform: translate(0, 50px) scale(0.85) !important;
+            }        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@200;300;400;500;700&display=swap');
 
         :root {
             --gold-light: #fef0b9; --gold-base: #dfb564;
@@ -2675,7 +2676,7 @@ let pendingMode = ''; // 记录玩家想进的是练习还是真实模式
             let scale = 1;
             if (isMobile) {
                 // 手机端：去除原图两侧大量的无用留白，直接放大 1.35 倍
-                scale = (window.innerWidth / 1400) * 1.35; 
+                scale = (window.innerWidth / 1400) * 1.15; 
             } else if (window.innerWidth < 1400) {
                 // 小屏电脑/平板等比缩放
                 scale = window.innerWidth / 1400;
