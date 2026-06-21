@@ -5,59 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>燕云十六声 - 神匠重铸模拟器 v1.7</title>
     <style>
-
-/* ========================================= */
-        /*   当面板打开时，隐藏所有底层悬浮 UI 按钮  */
-        /* ========================================= */
-        body.panel-open .top-left,
-        body.panel-open .top-right,
-        body.panel-open .weapon-name-ui,
-        body.panel-open .bottom-left-keys,
-        body.panel-open .bottom-right-keys,
-        body.panel-open .bottom-center {
-            display: none !important;
-            pointer-events: none !important;
-        }
-        /* [新增] 强制统一孔位容器的大小，以便后续能一起偏移和缩小 */
-        #slots-container {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-        }
-        /* 手机端打开面板时，顺便把背景彻底变纯黑，挡住武器模型 */
-        @media screen and (max-width: 850px) {
-            body.panel-open .center-scene {
-                display: none !important;
-            }
-            .panel-backdrop {
-                background: rgba(3, 4, 6, 0.98) !important;
-            }
-/* 10. 针对大屏手机极限调优：进一步放大并整体下移 */
-            .global-arc-svg, #slots-container {
-                transform-origin: center;
-                /* 圆弧突破拉大到 1.05 倍，向右偏移量相应增加到 85px 确保左侧文字不被切除 */
-                transform: translateX(85px) scale(1.05) !important;
-            }
-
-            /* 文字反向字号微调，配合 1.05 的高放大率，保证最终视觉依然舒适且不拥挤 */
-            .track-arc { stroke-width: 1.5 !important; stroke-dasharray: 5 10 !important; }
-            .prog-arc { stroke-width: 3.5 !important; }
-
-            .slot-icon { width: 42px !important; height: 42px !important; }
-            .diamond::after { width: 10px !important; height: 10px !important; border-radius: 2px !important;}
-            
-            .slot-name { font-size: 32px !important; margin-top: 5px !important; }
-            .slot-type { font-size: 18px !important; }
-            .slot-extra { font-size: 14px !important; margin-top: 8px !important; line-height: 1.4; }
-            .slot { gap: 14px !important; }
-            .svg-lock { width: 24px !important; height: 24px !important; }
-            
-            /* 【修改点】：整个舞台从 45% 下移到 52%，武器和孔位会一起下沉，给顶部留出充裕空间 */
-            .center-scene { top: 52% !important; } 
-
-            /* 保持长武器适度缩小，防止剑尖/枪尖戳出屏幕 */
-            #wp-剑, #wp-枪, #wp-唐刀, #wp-陌刀 {
-                transform-origin: center;
-                transform: translate(0, 50px) scale(0.85) !important;
-            }
         @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@200;300;400;500;700&display=swap');
 
         :root {
@@ -632,6 +579,30 @@
             #weapon-select-overlay .shop-box { width: 95vw !important; padding: 25px 15px !important; }
             #weapon-select-overlay .shop-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 10px; }
         }
+/* ========================================= */
+        /*   当面板打开时，隐藏所有底层悬浮 UI 按钮  */
+        /* ========================================= */
+        body.panel-open .top-left,
+        body.panel-open .top-right,
+        body.panel-open .weapon-name-ui,
+        body.panel-open .bottom-left-keys,
+        body.panel-open .bottom-right-keys,
+        body.panel-open .bottom-center {
+            display: none !important;
+            pointer-events: none !important;
+        }
+        
+        /* 手机端打开面板时背景变暗 */
+        @media screen and (max-width: 850px) {
+            body.panel-open .center-scene { display: none !important; }
+            .panel-backdrop { background: rgba(3, 4, 6, 0.98) !important; }
+        }
+        
+        /* [新增] 强制统一孔位容器的大小 */
+        #slots-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+        
+    </style>
+
     </style>
 </head>
 <body>
@@ -1774,9 +1745,7 @@
 
         function switchChar(charId) {
             if (globalData.activeCharId === charId) return;
-            
             saveData(); 
-            
             globalData.activeCharId = charId;
             appData = globalData.chars[charId].data;
             saveData();
@@ -1786,14 +1755,17 @@
             
             closeCharManager();
             initDOM();
-           function syncModeUI() {
-            const badge = document.getElementById('ui-mode-badge');
-            if(appData.mode === 'practice') { badge.innerText = "切换模式"; badge.style.color = "#ccc"; }
-            else { badge.innerText = "切换模式"; badge.style.color = "var(--gold-light)"; }
-
-            document.getElementById('dev-panel').style.display = appData.mode === 'practice' ? 'block' : 'none';
+            syncModeUI();
+            render();
+            if (isPanelOpen) renderSchemePanel();
+            if (isCollectionOpen) renderCollection();
+            updateBottomLeftUI();
             
+            document.getElementById('login-overlay').style.display = 'flex';
+            showToast(`已切换至档案：${globalData.chars[charId].name}`);
+        }
             // [新增] 只在学徒模式下，才显示右下角的统计按钮
+
             const devBtn = document.querySelector('.dev-toggle-btn');
             if (devBtn) { devBtn.style.display = appData.mode === 'practice' ? 'flex' : 'none'; }
             
@@ -1925,7 +1897,18 @@ let pendingMode = ''; // 记录玩家想进的是练习还是真实模式
             else { badge.innerText = "切换模式"; badge.style.color = "var(--gold-light)"; }
 
             document.getElementById('dev-panel').style.display = appData.mode === 'practice' ? 'block' : 'none';
+            
+            // [新增] 只在学徒模式下，才显示右下角的统计按钮
+            const devBtn = document.querySelector('.dev-toggle-btn');
+            if (devBtn) { devBtn.style.display = appData.mode === 'practice' ? 'flex' : 'none'; }
+            
             document.getElementById('top-right-ui').style.display = appData.mode === 'real' ? 'flex' : 'none';
+        }
+
+        // [新增] 手机端专属：点击按钮折叠/展开消耗监控面板
+        function toggleDevPanelMobile() {
+            const panel = document.getElementById('dev-panel');
+            panel.classList.toggle('show-mobile');
         }
 
         function formatDispName(name) { return name.replace(/套装[一二三]·/, ''); }
