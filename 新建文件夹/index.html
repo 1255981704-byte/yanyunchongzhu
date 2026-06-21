@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>燕云十六声 - 神匠重铸模拟器 v1.5</title>
+    <title>燕云十六声 - 神匠重铸模拟器 v1.7</title>
     <style>
 
 /* ========================================= */
@@ -30,30 +30,30 @@
             .panel-backdrop {
                 background: rgba(3, 4, 6, 0.98) !important;
             }
-/* 10. 针对大屏手机(如iPhone 16 Pro Max)调优：弧线更大，位置向右修正 */
+/* 10. 针对大屏手机极限调优：进一步放大并整体下移 */
             .global-arc-svg, #slots-container {
                 transform-origin: center;
-                /* 圆弧放大到 0.9 倍（原先为0.75），向右偏移 65px (为左侧孔位的长文字腾出足够空间) */
-                transform: translateX(65px) scale(0.9) !important;
+                /* 圆弧突破拉大到 1.05 倍，向右偏移量相应增加到 85px 确保左侧文字不被切除 */
+                transform: translateX(85px) scale(1.05) !important;
             }
 
-            /* 因为圆弧本身变大了，我们需要把原本过于夸张的文字倍数调回正常的黄金比例 */
-            .track-arc { stroke-width: 2 !important; stroke-dasharray: 6 12 !important; }
-            .prog-arc { stroke-width: 4 !important; }
+            /* 文字反向字号微调，配合 1.05 的高放大率，保证最终视觉依然舒适且不拥挤 */
+            .track-arc { stroke-width: 1.5 !important; stroke-dasharray: 5 10 !important; }
+            .prog-arc { stroke-width: 3.5 !important; }
 
-            .slot-icon { width: 48px !important; height: 48px !important; }
-            .diamond::after { width: 12px !important; height: 12px !important; border-radius: 2px !important;}
+            .slot-icon { width: 42px !important; height: 42px !important; }
+            .diamond::after { width: 10px !important; height: 10px !important; border-radius: 2px !important;}
             
-            .slot-name { font-size: 38px !important; margin-top: 6px !important; }
-            .slot-type { font-size: 22px !important; }
-            /* 副词条（颜色、金属等）字号调整，防止太长换行 */
-            .slot-extra { font-size: 16px !important; margin-top: 10px !important; line-height: 1.4; }
-            .slot { gap: 18px !important; }
-            .svg-lock { width: 28px !important; height: 28px !important; }
+            .slot-name { font-size: 32px !important; margin-top: 5px !important; }
+            .slot-type { font-size: 18px !important; }
+            .slot-extra { font-size: 14px !important; margin-top: 8px !important; line-height: 1.4; }
+            .slot { gap: 14px !important; }
+            .svg-lock { width: 24px !important; height: 24px !important; }
             
-            .center-scene { top: 45% !important; } /* 舞台位置微调 */
+            /* 【修改点】：整个舞台从 45% 下移到 52%，武器和孔位会一起下沉，给顶部留出充裕空间 */
+            .center-scene { top: 52% !important; } 
 
-            /* 依然保持长武器适度缩小，不然武器尖端会刺出屏幕 */
+            /* 保持长武器适度缩小，防止剑尖/枪尖戳出屏幕 */
             #wp-剑, #wp-枪, #wp-唐刀, #wp-陌刀 {
                 transform-origin: center;
                 transform: translate(0, 50px) scale(0.85) !important;
@@ -577,8 +577,7 @@
             .bt-diamonds-row { gap: 12px; }
             .bt-diamond { width: 20px; height: 20px; }
 
-            .dev-panel { display: none !important; }
-        }
+           .dev-panel { display: none !important; } /* 手机端隐藏调试面板以节省空间 */
 
 #weapon-select-overlay {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
@@ -626,7 +625,7 @@
     <div id="login-overlay">
         <div class="login-box">
             <div class="login-title">武器重铸模拟器</div>
-            <div class="login-author">蛋师傅铁匠铺 ver1.5 &nbsp;|&nbsp; by 伽号 & 贝贝小兔</div>
+            <div class="login-author">蛋师傅铁匠铺 ver1.7 &nbsp;|&nbsp; by 伽号 & 贝贝小兔</div>
            <div class="login-btns">
                 <button class="login-btn" onclick="showWeaponSelect('practice')">学徒重铸练习</button>
                 <button class="login-btn" onclick="showWeaponSelect('real')">神匠生涯模拟</button>
@@ -659,7 +658,7 @@
     </div>
 
     <div class="top-left">
-        <div class="tl-title">武器重铸模拟器 <span>ver1.5</span></div>
+        <div class="tl-title">武器重铸模拟器 <span>ver1.7</span></div>
         <div class="tl-sub">
             <div class="tl-sub-text">蛋师傅铁匠铺学徒专用 &nbsp;|&nbsp; by  伽号 & 贝贝小兔</div>
         </div>
