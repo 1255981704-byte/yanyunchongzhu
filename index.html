@@ -585,7 +585,7 @@
             .dev-title { font-size: 12px !important; margin-bottom: 12px !important; padding-bottom: 8px !important; }
             .dev-line { font-size: 11px !important; margin-bottom: 8px !important; }
             .dev-line span:last-child { font-size: 12px !important; }
-
+            }
 #weapon-select-overlay {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             background: rgba(3, 4, 6, 0.98); z-index: 999999; backdrop-filter: blur(20px);
@@ -664,17 +664,18 @@
     </div>
 <!-- 武器选择界面 -->
     <div id="weapon-select-overlay">
-        <div class="shop-box wide-box" style="width: 800px; padding: 40px;">
+        <!-- 宽度调整为 750px，看起来更紧凑 -->
+        <div class="shop-box wide-box" style="width: 750px; padding: 40px;">
             <div class="shop-title" style="margin-bottom: 30px;">请选择需重铸的武器</div>
-            <div class="shop-grid" style="grid-template-columns: repeat(4, 1fr);" id="ws-grid">
+            <!-- 修改为 repeat(3, 1fr)，刚好九把武器变成 3x3 完美九宫格 -->
+            <div class="shop-grid" style="grid-template-columns: repeat(3, 1fr);" id="ws-grid">
                 <!-- 武器列表由 JS 动态生成 -->
             </div>
             <div style="margin-top:30px;">
                 <button class="sp-btn cancel" style="padding: 12px 50px;" onclick="cancelWeaponSelect()">返 回</button>
             </div>
         </div>
-    </div>
-    <!-- 侧边栏外部点击遮罩 -->
+    </div>    <!-- 侧边栏外部点击遮罩 -->
     <div class="panel-backdrop" id="panel-backdrop" onclick="closeAllPanels()"></div>
 
     <div id="flash-layer"></div>
