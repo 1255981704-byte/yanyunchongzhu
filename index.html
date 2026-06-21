@@ -603,7 +603,6 @@
         
     </style>
 
-    </style>
 </head>
 <body>
 
@@ -1764,29 +1763,7 @@
             document.getElementById('login-overlay').style.display = 'flex';
             showToast(`已切换至档案：${globalData.chars[charId].name}`);
         }
-            // [新增] 只在学徒模式下，才显示右下角的统计按钮
-
-            const devBtn = document.querySelector('.dev-toggle-btn');
-            if (devBtn) { devBtn.style.display = appData.mode === 'practice' ? 'flex' : 'none'; }
-            
-            document.getElementById('top-right-ui').style.display = appData.mode === 'real' ? 'flex' : 'none';
-        }
-        
-        // [新增] 手机端专属：点击按钮折叠/展开消耗监控面板
-        function toggleDevPanelMobile() {
-            const panel = document.getElementById('dev-panel');
-            panel.classList.toggle('show-mobile');
-        }
-            render();
-            if (isPanelOpen) renderSchemePanel();
-            if (isCollectionOpen) renderCollection();
-            updateBottomLeftUI();
-            
-            // 每次切换生涯也强制显示模式选择
-            document.getElementById('login-overlay').style.display = 'flex';
-            showToast(`已切换至档案：${globalData.chars[charId].name}`);
-        }
-
+          
         function createNewChar() {
             closeCharManager();
             setTimeout(() => {
