@@ -18,7 +18,10 @@
             display: none !important;
             pointer-events: none !important;
         }
-        
+        /* [新增] 强制统一孔位容器的大小，以便后续能一起偏移和缩小 */
+        #slots-container {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+        }
         /* 手机端打开面板时，顺便把背景彻底变纯黑，挡住武器模型 */
         @media screen and (max-width: 850px) {
             body.panel-open .center-scene {
@@ -27,27 +30,34 @@
             .panel-backdrop {
                 background: rgba(3, 4, 6, 0.98) !important;
             }
-/* 10. 视觉回调适配 */
-            /* 适度放大圆弧与孔位，配合 1.15 的倍率 */
-            .track-arc { stroke-width: 2 !important; stroke-dasharray: 6 12 !important; }
-            .prog-arc { stroke-width: 3.5 !important; }
+/* 10. 全新调优：缩小圆弧整体并右移，同时大幅放大文字保证清晰可读 */
+            .global-arc-svg, #slots-container {
+                transform-origin: center;
+                /* 圆弧整体缩小至 0.75 倍，并向右偏移 45px (拉回屏幕内) */
+                transform: translateX(45px) scale(0.75) !important;
+            }
 
-            .slot-icon { width: 36px !important; height: 36px !important; }
-            .diamond::after { width: 10px !important; height: 10px !important; border-radius: 2px !important;}
-            
-            .slot-name { font-size: 28px !important; margin-top: 5px !important; }
-            .slot-type { font-size: 18px !important; }
-            .slot-extra { font-size: 14px !important; margin-top: 10px !important; line-height: 1.4; }
-            .slot { gap: 16px !important; }
-            .svg-lock { width: 22px !important; height: 22px !important; }
-            
-            .center-scene { top: 46% !important; } /* 位置微调 */
+            /* 反向大幅放大孔位里的内容，抵消缩放，保证手机上清晰 */
+            .track-arc { stroke-width: 2.5 !important; stroke-dasharray: 6 12 !important; }
+            .prog-arc { stroke-width: 4.5 !important; }
 
-            /* [新增] 专门针对手机端，把剑、枪、刀这类长武器单独缩小，防止溢出屏幕 */
+            .slot-icon { width: 56px !important; height: 56px !important; }
+            .diamond::after { width: 14px !important; height: 14px !important; border-radius: 2px !important;}
+            
+            .slot-name { font-size: 46px !important; margin-top: 8px !important; }
+            .slot-type { font-size: 26px !important; }
+            .slot-extra { font-size: 20px !important; margin-top: 14px !important; line-height: 1.4; }
+            .slot { gap: 24px !important; }
+            .svg-lock { width: 34px !important; height: 34px !important; }
+            
+            .center-scene { top: 45% !important; } /* 位置微调 */
+
+            /* 保持长武器适度缩小，其余短武器维持原比例 */
             #wp-剑, #wp-枪, #wp-唐刀, #wp-陌刀 {
                 transform-origin: center;
                 transform: translate(0, 50px) scale(0.85) !important;
-            }        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@200;300;400;500;700&display=swap');
+            }
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@200;300;400;500;700&display=swap');
 
         :root {
             --gold-light: #fef0b9; --gold-base: #dfb564;
@@ -2676,7 +2686,7 @@ let pendingMode = ''; // 记录玩家想进的是练习还是真实模式
             let scale = 1;
             if (isMobile) {
                 // 手机端：去除原图两侧大量的无用留白，直接放大 1.35 倍
-                scale = (window.innerWidth / 1400) * 1.15; 
+                scale = (window.innerWidth / 1400) * 0.95; 
             } else if (window.innerWidth < 1400) {
                 // 小屏电脑/平板等比缩放
                 scale = window.innerWidth / 1400;
