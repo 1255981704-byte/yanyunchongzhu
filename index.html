@@ -577,7 +577,21 @@
             .bt-diamonds-row { gap: 12px; }
             .bt-diamond { width: 20px; height: 20px; }
 
-           .dev-panel { display: none !important; } /* 手机端隐藏调试面板以节省空间 */
+         /* 11. 恢复手机端的后台监控(消耗)面板，精简并放置于右侧武器名下方 */
+            .dev-panel {
+                top: 235px !important;       /* 刚好贴在武器名字的下方 */
+                right: 15px !important;      /* 靠右对齐 */
+                left: auto !important;
+                bottom: auto !important;
+                width: 135px !important;     /* 缩小整体宽度 */
+                padding: 10px 12px !important;
+                background: rgba(10,12,16,0.3) !important; /* 调低背景透明度 */
+                backdrop-filter: blur(3px) !important;
+                pointer-events: none !important; /* 关键：变成无触摸模式，即使压到了底下的孔位也不影响玩家手指点击锁孔 */
+            }
+            .dev-title { font-size: 10px !important; margin-bottom: 8px !important; padding-bottom: 5px !important; }
+            .dev-line { font-size: 10px !important; margin-bottom: 5px !important; }
+            .dev-line span:last-child { font-size: 11px !important; }
 
 #weapon-select-overlay {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
