@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>燕云十六声 - 神匠重铸模拟器 v1.7</title>
+    <title>燕云十六声 - 神匠重铸模拟器 v2.0</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@200;300;400;500;700&display=swap');
 
@@ -423,7 +423,7 @@
         #modal-input { width: 100%; box-sizing: border-box; padding: 12px 20px; margin-bottom: 30px; background: rgba(0,0,0,0.4); border: 1px solid rgba(223,181,100,0.3); color: var(--gold-light); font-size: 15px; outline: none; text-align: center; border-radius: 2px; font-family: inherit; font-weight: 300; letter-spacing: 2px;}
         #modal-input:focus { border-color: rgba(223,181,100,0.8); background: rgba(223,181,100,0.05); }
 
-        .dev-panel { position: absolute; left: 50px; bottom: 80px; background: rgba(10,12,16,0.7); border: 1px solid rgba(255,255,255,0.05); padding: 20px 25px; width: 240px; display: block; font-family: sans-serif; pointer-events: auto; z-index: 1000; border-radius: 2px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); backdrop-filter: blur(15px);}
+       .dev-panel { position: absolute; right: 50px; bottom: 80px; left: auto; background: rgba(10,12,16,0.7); border: 1px solid rgba(255,255,255,0.05); padding: 20px 25px; width: 240px; display: block; font-family: sans-serif; pointer-events: auto; z-index: 1000; border-radius: 2px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); backdrop-filter: blur(15px); transition: opacity 0.3s ease;}
         .dev-title { color: #888; font-size: 12px; margin-bottom: 18px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 10px; letter-spacing: 2px; font-weight: 300;}
         .dev-line { display: flex; justify-content: space-between; font-size: 12px; color: #bbb; margin-bottom: 12px; letter-spacing: 1px; font-weight: 300;}
         .dev-line span:last-child { font-family: monospace; color: var(--gold-light); font-size: 13px;}
@@ -620,7 +620,11 @@
             display: none !important;
             pointer-events: none !important;
         }
-        
+        /* 侧边面板打开时，后台监控面板自动透明 */
+        body.panel-open .dev-panel {
+            opacity: 0 !important;
+            pointer-events: none !important;
+        }
         /* 手机端打开面板时背景变暗 */
         @media screen and (max-width: 850px) {
             body.panel-open .center-scene { display: none !important; }
@@ -655,7 +659,7 @@
     <div id="login-overlay">
         <div class="login-box">
             <div class="login-title">武器重铸模拟器</div>
-            <div class="login-author">蛋师傅铁匠铺 ver1.7 &nbsp;|&nbsp; by 伽号 & 贝贝小兔</div>
+            <div class="login-author">蛋师傅铁匠铺 ver2.0 &nbsp;|&nbsp; by 伽号 & 贝贝小兔</div>
            <div class="login-btns">
                 <button class="login-btn" onclick="showWeaponSelect('practice')">学徒重铸练习</button>
                 <button class="login-btn" onclick="showWeaponSelect('real')">神匠生涯模拟</button>
@@ -689,7 +693,7 @@
     </div>
 
     <div class="top-left">
-        <div class="tl-title">武器重铸模拟器 <span>ver1.7</span></div>
+        <div class="tl-title">武器重铸模拟器 <span>ver2.0</span></div>
         <div class="tl-sub">
             <div class="tl-sub-text">蛋师傅铁匠铺学徒专用 &nbsp;|&nbsp; by  伽号 & 贝贝小兔</div>
         </div>
@@ -699,15 +703,15 @@
         <div class="controls-group">
             <div class="weapon-selector">
                 <select id="weapon-type-select" onchange="onWeaponChange()">
-                    <option value="剑">武器类型：剑</option>
-                    <option value="枪">武器类型：枪</option>
-                    <option value="二代伞">武器类型：二代伞</option>
-                    <option value="二代扇">武器类型：二代扇</option>
-                    <option value="唐刀">武器类型：唐刀</option>
-                    <option value="陌刀">武器类型：陌刀</option>
-                    <option value="拳甲">武器类型：拳甲</option>
-                    <option value="弓">武器类型：弓</option>
-                    <option value="鼓">武器类型：鼓</option> <!-- 新增 鼓 -->
+                    <option value="剑">武器类型：二代剑</option>
+<option value="枪">武器类型：二代枪</option>
+<option value="二代伞">武器类型：二代伞</option>
+<option value="二代扇">武器类型：二代扇</option>
+<option value="唐刀">武器类型：唐刀</option>
+<option value="陌刀">武器类型：陌刀</option>
+<option value="拳甲">武器类型：拳甲</option>
+<option value="弓">武器类型：弓箭</option>
+<option value="鼓">武器类型：鼓</option>
                 </select>
             </div>
             <!-- 模式切换按钮 -->
@@ -735,7 +739,7 @@
         </div>
         <div class="recharge-display" style="margin-top: 10px; font-size: 12px; color: #888; text-align: right; letter-spacing: 1px;">
             账号价值(累投): ¥ <span id="ui-total-value" style="color: var(--gold-base); font-family: sans-serif; font-size: 14px;">0</span>
-            <div style="font-size:10px; color:#555; margin-top:4px;">(1长明珠=16.6元 | 1八音窍=1450元)</div>
+           <div style="font-size:10px; color:#555; margin-top:4px;">(12长明珠=1元 | 消耗1八音窍=1450元)</div>
         </div>
     </div>
 
@@ -1624,11 +1628,10 @@
     <div class="toast" id="toast"></div>
 
     <script>
-     const WEAPON_TITLES = {
-            '剑': '藏音·龙跃霄汉', '枪': '藏音·昆山玉碎', '二代伞': '藏音·星河欲曙', '二代扇': '藏音·觉蒙天风',
-            '唐刀': '藏音·羲和敲日', '陌刀': '藏音·万古悲尘', '拳甲': '藏音·丹霄清鸣', '弓': '藏音·凤凰于飞', '鼓': '藏音·霓裳清响'
-        };
-
+const WEAPON_TITLES = {
+    '剑': '藏音·龙跃霄汉', '枪': '藏音·潜龙在渊', '二代伞': '藏音·星河欲曙', '二代扇': '藏音·霓裳天风',
+    '唐刀': '藏音·羲和敲日', '陌刀': '藏音·万古悲尘', '拳甲': '藏音·丹霄清鸣', '弓': '藏音·凤凰于飞', '鼓': '藏音·霓裳清响'
+};
      const WEAPON_TYPES = {
             '剑': ['剑颚', '剑刃', '颜色', '剑柄', '明光'], '枪': ['枪杆', '枪头', '颜色', '枪套', '明光'],
             '二代伞': ['伞饰', '伞面', '颜色', '伞底', '明光'], '二代扇': ['扇骨', '扇面', '颜色', '扇坠', '明光'],
@@ -1824,19 +1827,31 @@ let pendingMode = ''; // 记录玩家想进的是练习还是真实模式
             weapons.forEach(w => {
                 // 判断是否已拥有该武器（练习模式全解锁）
                 let isOwned = appData.ownedWeapons.includes(w) || pendingMode === 'practice';
-                let statusText = isOwned ? '✅ 免费 / 已解锁' : '🔒 需 1 八音窍';
+               let statusText = isOwned ? '' : '🔒 需 1 八音窍';
                 let color = isOwned ? 'var(--gold-base)' : '#888';
                 
-                // [修改处]：获取长名字，如 "藏音·龙跃霄汉"
-                let fullTitle = WEAPON_TITLES[w] || w;
-                
-                grid.innerHTML += `
-                    <div class="ws-item" onclick="confirmWeaponSelect('${w}')">
-                        <!-- [修改处]：这里原本是 ${w}，改为了 ${fullTitle}，并稍微缩小了字号防止文字太长换行 -->
-                        <div class="ws-name" style="font-size: 15px; letter-spacing: 2px;">${fullTitle}</div>
-                        <div class="ws-status" style="color: ${color}">${statusText}</div>
+                // 获取全名
+            let fullTitle = WEAPON_TITLES[w] || w;
+            
+            // 匹配对应的短名称
+            const shortNames = {
+                '剑': '二代剑', '枪': '二代枪', '二代伞': '二代伞', '二代扇': '二代扇',
+                '唐刀': '唐刀', '陌刀': '陌刀', '拳甲': '拳甲', '弓': '弓箭', '鼓': '鼓'
+            };
+            let shortName = shortNames[w] || w;
+            
+            // 将全名和类型组合显示：上面全名，下面类型
+            grid.innerHTML += `
+                <div class="ws-item" onclick="confirmWeaponSelect('${w}')">
+                    <div style="display: flex; flex-direction: column; align-items: center; gap: 8px;">
+                        <!-- 上面显示藏音全名 -->
+                        <div class="ws-name" style="font-size: 16px; letter-spacing: 2px;">${fullTitle}</div>
+                        <!-- 下面显示武器类型 -->
+                        <div style="font-size: 12px; color: #888; letter-spacing: 3px; font-weight: 300;">[ ${shortName} ]</div>
                     </div>
-                `;
+                    <div class="ws-status" style="color: ${color}; margin-top: 4px;">${statusText}</div>
+                </div>
+            `;
             });
         }
 
@@ -1903,11 +1918,12 @@ let pendingMode = ''; // 记录玩家想进的是练习还是真实模式
             if(appData.mode === 'practice') { badge.innerText = "切换模式"; badge.style.color = "#ccc"; }
             else { badge.innerText = "切换模式"; badge.style.color = "var(--gold-light)"; }
 
-            document.getElementById('dev-panel').style.display = appData.mode === 'practice' ? 'block' : 'none';
-            
-            // [新增] 只在学徒模式下，才显示右下角的统计按钮
-            const devBtn = document.querySelector('.dev-toggle-btn');
-            if (devBtn) { devBtn.style.display = appData.mode === 'practice' ? 'flex' : 'none'; }
+            // 无论学徒还是生涯模式，都显示后台监控
+        document.getElementById('dev-panel').style.display = 'block'; 
+        
+        // 右下角的统计折叠按钮也同步始终显示
+        const devBtn = document.querySelector('.dev-toggle-btn');
+        if (devBtn) { devBtn.style.display = 'flex'; }
             
             document.getElementById('top-right-ui').style.display = appData.mode === 'real' ? 'flex' : 'none';
         }
@@ -2157,7 +2173,7 @@ let pendingMode = ''; // 记录玩家想进的是练习还是真实模式
                 document.getElementById('ui-bayin').innerText = appData.bayin;
                 if (document.getElementById('ui-total-value')) {
                     // 更新账号价值
-                    let totalVal = ((appData.totalRechargePearls || 0) * 16.6 + (appData.bayin || 0) * 1450).toFixed(1);
+                   let totalVal = ((appData.totalRechargePearls || 0) / 12 + (appData.usedBayin || 0) * 1450).toFixed(1);
                     document.getElementById('ui-total-value').innerText = totalVal;
                 }
                 return;
@@ -2238,7 +2254,7 @@ let pendingMode = ''; // 记录玩家想进的是练习还是真实模式
             
             if (document.getElementById('ui-total-value')) {
                 // 更新账号价值，明确标识出算法
-                let totalVal = ((appData.totalRechargePearls || 0) * 16.6 + (appData.bayin || 0) * 1450).toFixed(1);
+               let totalVal = ((appData.totalRechargePearls || 0) / 12 + (appData.usedBayin || 0) * 1450).toFixed(1);
                 document.getElementById('ui-total-value').innerText = totalVal;
             }
 
@@ -2250,6 +2266,7 @@ let pendingMode = ''; // 记录玩家想进的是练习还是真实模式
             if (appData.mode === 'real') {
                 if (appData.bayin < 1) { openShop('bayin'); showToast("八音窍不足，请先兑换！"); return; }
                 appData.bayin -= 1;
+                appData.usedBayin = (appData.usedBayin || 0) + 1; // 记录已使用的八音窍数量
             }
             appData.ownedWeapons.push(appData.weaponType);
             saveData(); render();
@@ -2557,11 +2574,19 @@ let pendingMode = ''; // 记录玩家想进的是练习还是真实模式
 
         function handleSpaceClick() {
             if (isBreakthroughState) { closeBreakthrough(); return; }
-            if (document.getElementById('modal-overlay').style.display === 'flex') { confirmModal(); return; }
+            
+            // 【修改处1】拦截空格键，不再让空格直接确认弹窗，防止连按误洗金词条
+            if (document.getElementById('modal-overlay').style.display === 'flex') { return; }
 
             let hasUnprotectedGold = false;
             appData.weaponData.slots.forEach((s, i) => { if (s.logIdx < appData.weaponData.unlockedCount && !s.locked && i !== 4 && s.rank === 'gold') hasUnprotectedGold = true; });
-            if (hasUnprotectedGold) showModal("当前存在未锁定的金色词条<br>继续重铸将被覆盖，是否确认？", doReforgeAction); else doReforgeAction();
+            
+            // 【修改处2】增加额外的防误触提示文字
+            if (hasUnprotectedGold) {
+                showModal("当前存在未锁定的金色词条<br>继续重铸将被覆盖，是否确认？<br><span style='font-size:12px;color:#aaa;margin-top:10px;display:inline-block;'>（防误触保护：请按 Enter 回车键或点击确认）</span>", doReforgeAction); 
+            } else {
+                doReforgeAction();
+            }
         }
 
        function doReforgeAction() {
